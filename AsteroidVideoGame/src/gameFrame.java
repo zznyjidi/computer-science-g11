@@ -4,6 +4,8 @@ import javax.swing.Timer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.ImageIcon;
 
@@ -11,7 +13,7 @@ import javax.swing.ImageIcon;
 * Create game frame that shows the game
 */
 @SuppressWarnings("serial")
-public class gameFrame extends JFrame implements ActionListener {
+public class gameFrame extends JFrame implements ActionListener, MouseMotionListener {
 	// Game Objects
 	JLabel asteroid = new JLabel(new ImageIcon("images/asteroid.gif"));
 	JLabel saucer = new JLabel(new ImageIcon("images/saucer.gif"));
@@ -35,6 +37,7 @@ public class gameFrame extends JFrame implements ActionListener {
 		// Add Saucer
 		saucer.setBounds(300, 200, 75, 60);
 		background.add(saucer);
+		addMouseMotionListener(this);
 		// Start
 		gameTimer.start();
 		setVisible(true);
@@ -62,7 +65,28 @@ public class gameFrame extends JFrame implements ActionListener {
 		}
 		// Bottom
 		if (asteroid.getY() > 450) {
-			asteroidDeltaY = - asteroidDeltaY;
+			asteroidDeltaY = -asteroidDeltaY;
 		}
+		// Asteroid - Bounce on Saucer
+		if (asteroid.getBounds().intersects(saucer.getBounds())) {
+			asteroidDeltaY = -5;
+		}
+	}
+
+	/**
+	 * Implement MouseMotionListener Interface, Not Being Used
+	 */
+	@Override
+	public void mouseDragged(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * Handle Mouse Movement
+	 */
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		saucer.setBounds(event.getX(), event.getY(), 75, 60);
 	}
 }
