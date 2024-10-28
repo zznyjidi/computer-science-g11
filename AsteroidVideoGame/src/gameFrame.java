@@ -77,10 +77,7 @@ public class gameFrame extends JFrame implements ActionListener, MouseMotionList
 	 * Implement MouseMotionListener Interface, Not Being Used
 	 */
 	@Override
-	public void mouseDragged(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseDragged(MouseEvent event) {}
 
 	/**
 	 * Handle Mouse Movement
