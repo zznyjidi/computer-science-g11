@@ -22,8 +22,15 @@ public class Application {
         Scanner scan = new Scanner(System.in);
 
         // Find characters with the same nation
-        System.out.print("Enter nation to see how many characters share the same nation: ");
-        String targetNation = scan.nextLine();
+        String targetNation;
+        do {
+            System.out.print("Enter nation to see how many characters share the same nation: ");
+            targetNation = scan.nextLine();
+            if (!((targetNation.equalsIgnoreCase("Earth") || targetNation.equalsIgnoreCase("Fire") || 
+                targetNation.equalsIgnoreCase("Water") || targetNation.equalsIgnoreCase("Air"))))
+                System.err.println("Nation must be Earth, Fire, Water or Air! ");
+        } while (!((targetNation.equalsIgnoreCase("Earth") || targetNation.equalsIgnoreCase("Fire") || 
+            targetNation.equalsIgnoreCase("Water") || targetNation.equalsIgnoreCase("Air"))));
         int characterCountByNation = countByNation(characterArray, targetNation);
         if (characterCountByNation == 0)
             System.out.printf("No character is from the %s nation. %n", targetNation);

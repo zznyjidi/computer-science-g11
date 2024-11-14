@@ -41,7 +41,7 @@ public class ATLA {
     }
 
     public void setNation(String nation) {
-        if (nation == "Earth" || nation == "Fire" || nation == "Water" || nation == "Air")
+        if (nation.equals("Earth") || nation.equals("Fire") || nation.equals("Water") || nation.equals("Air"))
             this.nation = nation;
         else
             System.err.println("Nation must be Earth, Fire, Water or Air! ");
