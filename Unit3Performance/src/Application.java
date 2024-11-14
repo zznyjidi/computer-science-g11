@@ -25,13 +25,23 @@ public class Application {
         System.out.print("Enter nation to see how many characters share the same nation: ");
         String targetNation = scan.nextLine();
         int characterCountByNation = countByNation(characterArray, targetNation);
-        System.out.printf("%d characters are form the %s nation. %n", characterCountByNation, targetNation);
+        if (characterCountByNation == 0)
+            System.out.printf("No character is from the %s nation. %n", targetNation);
+        else if (characterCountByNation == 1)
+            System.out.printf("%d character is from the %s nation. %n", characterCountByNation, targetNation);
+        else
+            System.out.printf("%d characters are form the %s nation. %n", characterCountByNation, targetNation);
 
         // Find characters with the same age
         System.out.print("Enter age to see how many characters are the same age: ");
         int targetAge = scan.nextInt();
         int characterCountByAge = countByAge(characterArray, targetAge);
-        System.out.printf("%d characters are %d years old. %n", characterCountByAge, targetAge);
+        if (characterCountByAge == 0)
+            System.out.printf("No character is %d years old. %n", targetAge);
+        else if (characterCountByAge == 1)
+            System.out.printf("%d character is %d years old. %n", characterCountByAge, targetAge);
+        else
+            System.out.printf("%d characters are %d years old. %n", characterCountByAge, targetAge);
 
         // Close the Scanner
         scan.close();
