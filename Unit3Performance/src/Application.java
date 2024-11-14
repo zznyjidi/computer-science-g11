@@ -40,8 +40,13 @@ public class Application {
             System.out.printf("%d characters are form the %s nation. %n", characterCountByNation, targetNation);
 
         // Find characters with the same age
-        System.out.print("Enter age to see how many characters are the same age: ");
-        int targetAge = scan.nextInt();
+        int targetAge;
+        do {
+            System.out.print("Enter age to see how many characters are the same age: ");
+            targetAge = scan.nextInt();
+            if (targetAge < 0) 
+                System.err.println("Age can't be negative! ");
+        } while (targetAge < 0);
         int characterCountByAge = countByAge(characterArray, targetAge);
         if (characterCountByAge == 0)
             System.out.printf("No character is %d years old. %n", targetAge);
