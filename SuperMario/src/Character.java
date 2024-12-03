@@ -10,15 +10,16 @@ public class Character extends JLabel implements ActionListener {
     private ImageIcon[] icons;
 
     private String[] keyBind;
-    private int deltaX, deltaY;
+    private int deltaX = 10;
+    private int deltaY = 10;
 
     private Timer jumpTimer = new Timer(25, this);
     private int jumpCounter;
-    private boolean isJumping = false;
+    private boolean jumping = false;
 
     private Timer fallTimer = new Timer(25, this);
     private int fallCounter;
-    private boolean isFalling = false;
+    private boolean falling = false;
 
     /**
      * Character in Game
@@ -58,14 +59,18 @@ public class Character extends JLabel implements ActionListener {
         this.deltaY = deltaY;
     }
 
+    public boolean isJumping() {
+        return jumping;
+    }
+
     public void jump() {
-        isJumping = true;
+        jumping = true;
         jumpCounter = 0;
         jumpTimer.start();
     }
 
     public void fall() {
-        isFalling = true;
+        falling = true;
         fallCounter = 0;
         fallTimer.start();
     }
