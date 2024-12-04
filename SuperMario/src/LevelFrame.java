@@ -15,7 +15,7 @@ import javax.swing.KeyStroke;
 public class LevelFrame extends JFrame implements KeyListener {
 
     public static JLabel[][] gameBoard = new JLabel[20][25];
-    public static JPanel level1Panel = new JPanel();
+    public static JPanel levelPanel = new JPanel();
     public static Character character = new Character(Icon.characterIcon, new String[] {"a", "d", " "});
 
     public LevelFrame(int level) {
@@ -53,45 +53,42 @@ public class LevelFrame extends JFrame implements KeyListener {
     }
 
     private void initLevel() {
-        level1Panel.setLayout(null);
-        level1Panel.setBackground(Color.WHITE);
+        levelPanel.setLayout(null);
+        levelPanel.setBackground(Color.WHITE);
 
         for (int row = 0; row < gameBoard.length; row++) {
             for (int col = 0; col < gameBoard[0].length; col++) {
                 JLabel icon = gameBoard[row][col];
                 if (icon.getIcon() == Icon.WALL || icon.getIcon() == Icon.COIN) {
                     icon.setBounds(col*25, row*25, 25, 25);
-                    level1Panel.add(icon);
+                    levelPanel.add(icon);
                 }
             }
         }
 
         character.setBounds(25, 425, 25, 25);
-        level1Panel.add(character);
-        level1Panel.setBounds(0, 0, 25*gameBoard[0].length, 25*gameBoard.length);
-        add(level1Panel);
+        levelPanel.add(character);
+        levelPanel.setBounds(0, 0, 25*gameBoard[0].length, 25*gameBoard.length);
+        add(levelPanel);
     }
 
     private void initKeyBind() {
         ActionMap actionMap;
         InputMap inputMap;
 
-        inputMap = level1Panel.getInputMap();
-        actionMap = level1Panel.getActionMap();
+        inputMap = levelPanel.getInputMap();
+        actionMap = levelPanel.getActionMap();
 
         inputMap.put(KeyStroke.getKeyStroke(character.getKeyBind()[0].toCharArray()[0]), "MOVE_LEFT");
         actionMap.put("MOVE_LEFT", new KeyAction("MOVE_LEFT"));
         inputMap.put(KeyStroke.getKeyStroke(character.getKeyBind()[1].toCharArray()[0]), "MOVE_RIGHT");
         actionMap.put("MOVE_RIGHT", new KeyAction("MOVE_RIGHT"));
-        inputMap.put(KeyStroke.getKeyStroke(character.getKeyBind()[1].toCharArray()[0]), "MOVE_JUMP");
+        inputMap.put(KeyStroke.getKeyStroke(character.getKeyBind()[2].toCharArray()[0]), "MOVE_JUMP");
         actionMap.put("MOVE_JUMP", new KeyAction("MOVE_JUMP"));
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
-    }
+    public void keyPressed(KeyEvent e) {}
 
     @Override
     public void keyReleased(KeyEvent e) {
@@ -102,8 +99,5 @@ public class LevelFrame extends JFrame implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
-    }
+    public void keyTyped(KeyEvent e) {}
 }

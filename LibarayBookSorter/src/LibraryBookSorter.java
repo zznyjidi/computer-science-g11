@@ -1,3 +1,8 @@
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,12 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+@SuppressWarnings("FieldMayBeFinal")
 public class LibraryBookSorter extends JFrame implements ActionListener{
 
     // GUI Components
@@ -37,7 +37,7 @@ public class LibraryBookSorter extends JFrame implements ActionListener{
 
     public LibraryBookSorter() {
         // Init Storage
-        bookList = new ArrayList<String>();
+        bookList = new ArrayList<>();
 
         // GUI
         // Title
