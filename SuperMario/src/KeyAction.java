@@ -17,21 +17,14 @@ public class KeyAction extends TextAction{
     public void actionPerformed(ActionEvent e) {
         Character character = LevelFrame.character;
         // Move Left
-        if (e.getActionCommand().equals(character.getKeyBind()[0]) && 
-            LevelFrame.gameBoard[character.getPosition()[1]][character.getPosition()[0] - 1].getIcon() != Icon.WALL) {
-            character.moveDirection(-1, 0);
-        } 
+        if (e.getActionCommand().equals(character.getKeyBind()[0]))
+            character.moveDirection(-1);
         // Move Right
-        else if (e.getActionCommand().equals(character.getKeyBind()[1]) && 
-            LevelFrame.gameBoard[character.getPosition()[1]][character.getPosition()[0] + 1].getIcon() != Icon.WALL) {
-            character.moveDirection(1, 0);
-        }
+        else if (e.getActionCommand().equals(character.getKeyBind()[1]))
+            character.moveDirection(1);
         // Jump 
-        else if (e.getActionCommand().equals(character.getKeyBind()[2]) && 
-            LevelFrame.gameBoard[character.getPosition()[1] - 1][character.getPosition()[0]].getIcon() != Icon.WALL) {
-            if (!character.isJumping()) {
-                character.jump();
-            }
+        else if (e.getActionCommand().equals(character.getKeyBind()[2])) {
+            character.jump();
         }
     }
 

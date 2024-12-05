@@ -3,23 +3,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.Timer;
 
 public class Character extends JLabel implements ActionListener {
 
     private ImageIcon[] icons;
 
     private String[] keyBind;
-    private int deltaX = 10;
-    private int deltaY = 10;
+    private int deltaX;
+    private int deltaY;
 
-    private Timer jumpTimer = new Timer(25, this);
-    private int jumpCounter;
-    private boolean jumping = false;
-
-    private Timer fallTimer = new Timer(25, this);
-    private int fallCounter;
-    private boolean falling = false;
+    private boolean jumping;
 
     /**
      * Character in Game
@@ -31,9 +24,6 @@ public class Character extends JLabel implements ActionListener {
         this.icons = icons;
         this.keyBind = keyBind;
         setIcon(icons[0]);
-
-        jumpTimer.addActionListener(this);
-        fallTimer.addActionListener(this);
     }
 
     // Getter & Setters
@@ -67,90 +57,40 @@ public class Character extends JLabel implements ActionListener {
     }
 
     public void jump() {
-        jumping = true;
-        jumpCounter = 0;
-        jumpTimer.start();
+        if (LevelFrame.getCollisionY(getPosition(), -1) && !isJumping()) {
+            jumping = true;
+            deltaY = 10;
+        }
     }
 
-    public void fall() {
-        falling = true;
-        fallCounter = 0;
-        fallTimer.start();
-    }
-
-    public void moveDirection(int directionX, int directionY) {
-        setBounds(getX() + deltaX*directionX, getY() + deltaY*directionY, 25, 25);
+    public void moveDirection(int directionX) {
+        deltaX = directionX;
     }
 
     public int[] getPosition() {
-        return new int[] {(int)getX()/25, (int)getY()/25};
-    }
-
-    public void collectCoin() {
-        int row = getPosition()[1];
-        int col = getPosition()[0];
-
-        if (LevelFrame.gameBoard[row][col].getIcon() == Icon.COIN) {
-            LevelFrame.gameBoard[row][col].setIcon(null);
-        }
+        return new int[] {(int)getX(), (int)getY()};
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (jumping && deltaY < 0 && LevelFrame.gameBoard[getPosition()[1] - 1][getPosition()[0]].getIcon() == Icon.WALL) {
+        // Jumping and Falling
+        if (deltaY > 0)
+            deltaY--;
+        else if (!LevelFrame.getCollisionY(getPosition(), -1))
+            deltaY--;
+        
+        if (deltaY == 0)
             jumping = false;
-            deltaY = 0;
-            jumpTimer.stop();
-            fall();
-        } 
-        if (falling && deltaY > 0) {
-            int nextRow = getPosition()[1] + 1;
-            if (nextRow >= LevelFrame.gameBoard.length || LevelFrame.gameBoard[nextRow][getPosition()[0]].getIcon() == Icon.WALL) {
-                falling = false;
-                deltaY = 0;
-                fallTimer.stop();
-            }
-        }
-        if (jumping) {
-            jumpCounter++;
-            if (jumpCounter <= 10) 
-                deltaY = -5;
-            else if (jumpCounter <= 20)
-                deltaY = 5;
-            else {
-                jumping = false;
-                deltaY = 0;
-                jumpTimer.stop();
-                fall();
-            }
-        }
-        else if (falling) {
-            fallCounter++;
-            deltaY = 5;
-            setBounds(getX(), getY() - deltaY, 25, 25);
-
-            if (LevelFrame.gameBoard[getPosition()[1] + 1][getPosition()[0]].getIcon() == Icon.WALL) {
-                falling = false;
-                deltaY = 0;
-                fallTimer.stop();
-            }
-            else if (fallCounter >= 20) {
-                falling = false;
-                deltaY = 0;
-                fallTimer.stop();
-            }
-        }
-
-        collectCoin();
-
-        if (LevelFrame.gameBoard[getPosition()[1] + 1][getPosition()[0]].getIcon() == Icon.WALL) 
+        
+        // Collision
+        if (LevelFrame.getCollisionX(getPosition(), deltaX)) 
             deltaX = 0;
-        else if (LevelFrame.gameBoard[getPosition()[1]][getPosition()[0]].getIcon() == Icon.WALL && deltaX > 0) 
-            deltaX = 0;
-        else if (LevelFrame.gameBoard[getPosition()[1]][getPosition()[0]].getIcon() == Icon.WALL && deltaY < 0)
+        if (LevelFrame.getCollisionY(getPosition(), deltaY)) {
+            System.out.println("Y_COLLISION " + deltaY);
             deltaY = 0;
-        else if (LevelFrame.gameBoard[getPosition()[1]][getPosition()[0]].getIcon() == Icon.WALL && deltaY < 0)
-            deltaY = 0;
+        }
+
+        // Move Character base on delta Value
+        setBounds(getX() + deltaX, getY() - deltaY, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
     }
-    
 }
