@@ -96,7 +96,7 @@ public class LevelFrame extends JFrame implements KeyListener {
         levelPanel.addKeyListener(this);
     }
 
-    public static boolean getCollisionX(int[] position, int deltaX) {
+    public static boolean getCollisionX(int[] position, double deltaX) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;
         int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
@@ -130,18 +130,26 @@ public class LevelFrame extends JFrame implements KeyListener {
         return false;
     }
 
-    public static boolean getCollisionY(int[] position, int deltaY) {
+    public static boolean getCollisionY(int[] position, double deltaY) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;
         int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
         int indexColOffset = position[0] % Settings.BLOCK_SIZE;
-        boolean inMiddleCol = indexColOffset != 0;
+        boolean inMiddleCol = indexRowOffset != 0;
         
         // Move Up
         if (deltaY > 0) {
-            if (gameBoard[indexPosRow - 1][indexPosCol].getIcon() == Icon.WALL)
+            // At Block Edge & Left Block triggered Collision
+            if (gameBoard[indexPosRow][indexPosCol].getIcon() == Icon.WALL)
                 return true;
-            if (inMiddleCol && gameBoard[indexPosRow - 1][indexPosCol + 1].getIcon() == Icon.WALL)
+            // At Block Edge & Right Block triggered Collision
+            if (inMiddleCol && gameBoard[indexPosRow][indexPosCol + 1].getIcon() == Icon.WALL)
+                return true;
+            // At Next Block & next Frame Left Block trigger Collision
+            if (indexColOffset < deltaY && gameBoard[indexPosRow - 1][indexPosCol].getIcon() == Icon.WALL)
+                return true;
+            // At Next Block & next Frame Right Block trigger Collision
+            if (indexColOffset < deltaY && inMiddleCol && gameBoard[indexPosRow - 1][indexPosCol + 1].getIcon() == Icon.WALL)
                 return true;
         }
         // Move Down

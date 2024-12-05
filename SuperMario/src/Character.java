@@ -68,7 +68,7 @@ public class Character extends JLabel implements ActionListener {
     }
 
     public int[] getPosition() {
-        return new int[] {(int)getX(), (int)getY()};
+        return new int[] {getX(), getY()};
     }
 
     @Override
@@ -83,8 +83,9 @@ public class Character extends JLabel implements ActionListener {
             jumping = false;
         
         // Collision
-        if (LevelFrame.getCollisionX(getPosition(), deltaX)) 
+        if (LevelFrame.getCollisionX(getPosition(), deltaX)) {
             deltaX = 0;
+        }
         if (LevelFrame.getCollisionY(getPosition(), deltaY)) {
             System.out.println("Y_COLLISION " + deltaY);
             deltaY = 0;
@@ -92,5 +93,8 @@ public class Character extends JLabel implements ActionListener {
 
         // Move Character base on delta Value
         setBounds(getX() + deltaX, getY() - deltaY, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
+
+        // Collect Coin
+        
     }
 }
