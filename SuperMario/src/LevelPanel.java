@@ -7,13 +7,12 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
-public class LevelFrame extends JFrame implements KeyListener {
+public class LevelPanel extends JPanel implements KeyListener {
 
     public static JLabel[][] gameBoard = new JLabel[20][25];
     public static JPanel levelPanel = new JPanel();
@@ -21,8 +20,7 @@ public class LevelFrame extends JFrame implements KeyListener {
 
     public static Timer renderFrameTimer;
 
-    public LevelFrame(int level) {
-        setSize(Settings.BLOCK_SIZE*gameBoard[0].length + 15, Settings.BLOCK_SIZE*gameBoard.length + 35);
+    public LevelPanel(int level) {
 
         setLayout(null);
         //setResizable(false);
@@ -162,6 +160,29 @@ public class LevelFrame extends JFrame implements KeyListener {
                 return true;
         }
         return false;
+    }
+
+    public static int[] getTouchedCoinPos(int[] position) {
+        int indexPosRow = position[1] / Settings.BLOCK_SIZE;
+        int indexPosCol = position[0] / Settings.BLOCK_SIZE;
+        int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
+        int indexColOffset = position[0] % Settings.BLOCK_SIZE;
+        boolean inMiddleRow = indexColOffset != 0;
+        boolean inMiddleCol = indexRowOffset != 0;
+
+        // At Coin Block
+        if (gameBoard[indexPosRow][indexPosCol].getIcon() == Icon.COIN)
+            return new int[] {indexPosRow, indexPosCol};
+        // Reaching from Top
+        else if (inMiddleRow && gameBoard[indexPosRow + 1][indexPosCol].getIcon() == Icon.COIN)
+            return new int[] {indexPosRow + 1, indexPosCol};
+        // Reaching from Left
+        else if (inMiddleCol && gameBoard[indexPosRow][indexPosCol + 1].getIcon() == Icon.COIN)
+            return new int[] {indexPosRow, indexPosCol + 1};
+        // Reaching from Top Left
+        else if (inMiddleRow && inMiddleCol && gameBoard[indexPosRow + 1][indexPosCol + 1].getIcon() == Icon.COIN)
+            return new int[] {indexPosRow + 1, indexPosCol +1};
+        return new int[] {-1, -1};
     }
 
     @Override

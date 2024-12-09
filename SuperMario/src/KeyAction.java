@@ -15,7 +15,7 @@ public class KeyAction extends TextAction{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Character character = LevelFrame.character;
+        Character character = LevelPanel.character;
         // Move Left
         if (e.getActionCommand().equals(character.getKeyBind()[0]))
             character.moveDirection(-1);
