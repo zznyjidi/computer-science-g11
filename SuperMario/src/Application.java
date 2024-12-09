@@ -8,6 +8,9 @@ public class Application {
         LevelPanel levelPanel = new LevelPanel(1);
         mainFrame.add(levelPanel);
 
+        SoundPlayer soundEffects = new SoundPlayer(Sound.metalPipe);
+        soundEffects.play();
+
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setSize(Settings.BLOCK_SIZE*LevelPanel.gameBoard[0].length + 15, Settings.BLOCK_SIZE*LevelPanel.gameBoard.length + 35);
         mainFrame.setVisible(true);

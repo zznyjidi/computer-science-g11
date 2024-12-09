@@ -94,7 +94,7 @@ public class LevelPanel extends JPanel implements KeyListener {
         levelPanel.addKeyListener(this);
     }
 
-    public static boolean getCollisionX(int[] position, double deltaX) {
+    public static boolean getCollisionX(int[] position, int deltaX) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;
         int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
@@ -128,7 +128,7 @@ public class LevelPanel extends JPanel implements KeyListener {
         return false;
     }
 
-    public static boolean getCollisionY(int[] position, double deltaY) {
+    public static boolean getCollisionY(int[] position, int deltaY) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;
         int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
