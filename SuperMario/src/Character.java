@@ -58,6 +58,7 @@ public class Character extends JLabel implements ActionListener {
 
     public void jump() {
         if (LevelPanel.getCollisionY(getPosition(), -1) && !isJumping()) {
+            SoundPlayer.play(Sound.jump);
             jumping = true;
             deltaY = 10;
         }
@@ -89,6 +90,7 @@ public class Character extends JLabel implements ActionListener {
         if (LevelPanel.getCollisionY(getPosition(), deltaY)) {
             System.out.println("Y_COLLISION " + deltaY);
             deltaY = 0;
+            SoundPlayer.play(Sound.hitGround);
         }
 
         // Move Character base on delta Value
@@ -98,6 +100,7 @@ public class Character extends JLabel implements ActionListener {
         int[] coinPos = LevelPanel.getTouchedCoinPos(getPosition());
         if (coinPos[0] != -1 && coinPos[1] != -1) {
             LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
+            SoundPlayer.play(Sound.coinCollected);
         }
     }
 }
