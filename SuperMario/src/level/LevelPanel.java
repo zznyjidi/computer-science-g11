@@ -1,13 +1,12 @@
 package level;
 
-import global.Database;
-import global.Settings;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JLabel;
@@ -15,11 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
+import global.Database;
+import global.Settings;
+
 public class LevelPanel extends JPanel implements KeyListener {
 
     public static JLabel[][] gameBoard = new JLabel[20][25];
     public static JPanel levelPanel = new JPanel();
-    public static Character character = new Character(Icon.characterIcon, new String[] {"a", "d", " "});
+    public static Character character = new Character(Icon.characterIcon, new String[] { "a", "d", " " });
 
     public static Timer renderFrameTimer;
 
@@ -32,12 +34,12 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         initKeyBind();
 
-        Database.windowLength = Settings.BLOCK_SIZE*LevelPanel.gameBoard[0].length;
-        Database.windowWidth = Settings.BLOCK_SIZE*LevelPanel.gameBoard.length + 35;
+        Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length;
+        Database.windowWidth = Settings.BLOCK_SIZE * LevelPanel.gameBoard.length + 35;
 
         setBounds(0, 0, Database.windowLength, Database.windowWidth);
 
-        renderFrameTimer = new Timer((1000/Settings.RENDER_FRAME_LIMIT), character);
+        renderFrameTimer = new Timer((1000 / Settings.RENDER_FRAME_LIMIT), character);
         renderFrameTimer.addActionListener(character);
         renderFrameTimer.start();
     }
@@ -70,7 +72,10 @@ public class LevelPanel extends JPanel implements KeyListener {
             for (int col = 0; col < gameBoard[0].length; col++) {
                 JLabel icon = gameBoard[row][col];
                 if (icon.getIcon() == Icon.WALL || icon.getIcon() == Icon.COIN) {
-                    icon.setBounds(col*Settings.BLOCK_SIZE, row*Settings.BLOCK_SIZE, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
+                    icon.setBounds(
+                        col * Settings.BLOCK_SIZE, row * Settings.BLOCK_SIZE,
+                        Settings.BLOCK_SIZE, Settings.BLOCK_SIZE
+                    );
                     levelPanel.add(icon);
                 }
             }
@@ -78,7 +83,7 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         character.setBounds(25, 425, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
         levelPanel.add(character);
-        levelPanel.setBounds(0, 0, Settings.BLOCK_SIZE*gameBoard[0].length, Settings.BLOCK_SIZE*gameBoard.length);
+        levelPanel.setBounds(0, 0, Settings.BLOCK_SIZE * gameBoard[0].length, Settings.BLOCK_SIZE * gameBoard.length);
         add(levelPanel);
     }
 
@@ -139,7 +144,7 @@ public class LevelPanel extends JPanel implements KeyListener {
         int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
         int indexColOffset = position[0] % Settings.BLOCK_SIZE;
         boolean inMiddleCol = indexRowOffset != 0;
-        
+
         // Move Up
         if (deltaY > 0) {
             // At Block Edge & Left Block triggered Collision
@@ -177,21 +182,22 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         // At Coin Block
         if (gameBoard[indexPosRow][indexPosCol].getIcon() == Icon.COIN)
-            return new int[] {indexPosRow, indexPosCol};
+            return new int[] { indexPosRow, indexPosCol };
         // Reaching from Top
         else if (inMiddleRow && gameBoard[indexPosRow + 1][indexPosCol].getIcon() == Icon.COIN)
-            return new int[] {indexPosRow + 1, indexPosCol};
+            return new int[] { indexPosRow + 1, indexPosCol };
         // Reaching from Left
         else if (inMiddleCol && gameBoard[indexPosRow][indexPosCol + 1].getIcon() == Icon.COIN)
-            return new int[] {indexPosRow, indexPosCol + 1};
+            return new int[] { indexPosRow, indexPosCol + 1 };
         // Reaching from Top Left
         else if (inMiddleRow && inMiddleCol && gameBoard[indexPosRow + 1][indexPosCol + 1].getIcon() == Icon.COIN)
-            return new int[] {indexPosRow + 1, indexPosCol +1};
-        return new int[] {-1, -1};
+            return new int[] { indexPosRow + 1, indexPosCol + 1 };
+        return new int[] { -1, -1 };
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {}
+    public void keyPressed(KeyEvent e) {
+    }
 
     @Override
     public void keyReleased(KeyEvent e) {
@@ -203,5 +209,6 @@ public class LevelPanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 }

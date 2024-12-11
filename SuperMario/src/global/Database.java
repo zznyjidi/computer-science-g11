@@ -1,7 +1,8 @@
 package global;
 
-import hud.ScoreDisplay;
 import javax.swing.Timer;
+
+import hud.ScoreDisplay;
 
 public class Database {
     public static Timer levelTimer;

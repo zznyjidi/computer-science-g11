@@ -2,6 +2,7 @@ package sound;
 
 import java.io.File;
 import java.io.IOException;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -16,7 +17,7 @@ public class SoundPlayer {
             AudioInputStream stream = AudioSystem.getAudioInputStream(sound);
             Clip audioPlayer = AudioSystem.getClip();
             audioPlayer.open(stream);
-            
+
             // Close Clip and Stream
             // https://stackoverflow.com/questions/69184459/reusing-an-audioinputstream
             audioPlayer.addLineListener(event -> {
@@ -29,7 +30,7 @@ public class SoundPlayer {
                     }
                 }
             });
-            
+
             audioPlayer.start();
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
             e.printStackTrace();

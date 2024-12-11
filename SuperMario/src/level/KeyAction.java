@@ -1,10 +1,10 @@
 package level;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.text.TextAction;
 
-
-public class KeyAction extends TextAction{
+public class KeyAction extends TextAction {
 
     private String key;
 
@@ -23,7 +23,7 @@ public class KeyAction extends TextAction{
         // Move Right
         else if (e.getActionCommand().equals(character.getKeyBind()[1]))
             character.moveDirection(1);
-        // Jump 
+        // Jump
         else if (e.getActionCommand().equals(character.getKeyBind()[2])) {
             character.jump();
         }

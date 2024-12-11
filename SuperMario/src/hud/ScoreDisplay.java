@@ -2,6 +2,7 @@ package hud;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -11,11 +12,11 @@ import global.Settings;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class ScoreDisplay extends JPanel implements ActionListener {
-    
+
     private JLabel scoreLabel;
     private JLabel timerLabel;
 
-    private int[] timerTime = new int[] {0, 0, 0};
+    private int[] timerTime = new int[] { 0, 0, 0 };
     private int score = 0;
 
     public ScoreDisplay() {
@@ -27,7 +28,7 @@ public class ScoreDisplay extends JPanel implements ActionListener {
         scoreLabel.setBounds(30, 30, 30, 10);
         scoreLabel.setForeground(Settings.TEXT_COLOR);
         this.add(scoreLabel);
-        
+
         timerLabel = new JLabel();
         timerLabel.setBounds(30, 40, 100, 10);
         timerLabel.setForeground(Settings.TEXT_COLOR);

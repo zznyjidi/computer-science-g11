@@ -2,6 +2,7 @@ package level;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -22,8 +23,9 @@ public class Character extends JLabel implements ActionListener {
 
     /**
      * Character in Game
-     * @param icons ImageIcon[] for character sprite
-     * @param keyBind
+     * 
+     * @param icons   ImageIcon[] for character sprite
+     * @param keyBind keyBind for movements
      */
     public Character(ImageIcon[] icons, String[] keyBind) {
         super();
@@ -36,24 +38,31 @@ public class Character extends JLabel implements ActionListener {
     public ImageIcon[] getIcons() {
         return icons;
     }
+
     public void setIcons(ImageIcon[] icons) {
         this.icons = icons;
     }
+
     public String[] getKeyBind() {
         return keyBind;
     }
+
     public void setKeyBind(String[] keyBind) {
         this.keyBind = keyBind;
     }
+
     public int getDeltaX() {
         return deltaX;
     }
+
     public void setDeltaX(int deltaX) {
         this.deltaX = deltaX;
     }
+
     public int getDeltaY() {
         return deltaY;
     }
+
     public void setDeltaY(int deltaY) {
         this.deltaY = deltaY;
     }
@@ -79,7 +88,7 @@ public class Character extends JLabel implements ActionListener {
     }
 
     public int[] getPosition() {
-        return new int[] {getX(), getY()};
+        return new int[] { getX(), getY() };
     }
 
     @Override
@@ -89,10 +98,10 @@ public class Character extends JLabel implements ActionListener {
             deltaY--;
         else if (!LevelPanel.getCollisionY(getPosition(), -1))
             deltaY--;
-        
+
         if (deltaY == 0)
             jumping = false;
-        
+
         // Collision
         if (LevelPanel.getCollisionX(getPosition(), deltaX)) {
             deltaX = 0;
