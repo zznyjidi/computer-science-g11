@@ -65,6 +65,10 @@ public class Character extends JLabel implements ActionListener {
     }
 
     public void moveDirection(int directionX) {
+        if (directionX > 0)
+            setIcon(icons[0]);
+        else if (directionX < 0)
+            setIcon(icons[2]);
         deltaX = directionX;
     }
 
@@ -100,6 +104,7 @@ public class Character extends JLabel implements ActionListener {
         int[] coinPos = LevelPanel.getTouchedCoinPos(getPosition());
         if (coinPos[0] != -1 && coinPos[1] != -1) {
             LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
+            Database.scoreDisplay.incrementScore(1);
             SoundPlayer.play(Sound.coinCollected);
         }
     }
