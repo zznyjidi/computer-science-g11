@@ -1,9 +1,13 @@
+package hud;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import global.Database;
+import global.Settings;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class ScoreDisplay extends JPanel implements ActionListener {

@@ -2,6 +2,10 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.WindowConstants;
 
+import global.Database;
+import hud.ScoreDisplay;
+import level.LevelPanel;
+
 public class Application {
 
     public static void main(String[] args) {
