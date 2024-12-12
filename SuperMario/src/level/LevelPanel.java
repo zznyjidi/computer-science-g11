@@ -55,6 +55,7 @@ public class LevelPanel extends JPanel implements KeyListener {
                     gameBoard[row][col] = switch (lineArray[col]) {
                         case 'B' -> new JLabel(Icon.WALL);
                         case 'C' -> new JLabel(Icon.COIN);
+                        case 'F' -> new JLabel(Icon.FLAG);
                         default -> new JLabel();
                     };
                 }

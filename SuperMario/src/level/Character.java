@@ -107,7 +107,6 @@ public class Character extends JLabel implements ActionListener {
             deltaX = 0;
         }
         if (LevelPanel.getCollisionY(getPosition(), deltaY)) {
-            System.out.println("Y_COLLISION " + deltaY);
             deltaY = 0;
             SoundPlayer.play(Sound.hitGround);
         }
@@ -121,6 +120,12 @@ public class Character extends JLabel implements ActionListener {
             LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
             Database.scoreDisplay.incrementScore(1);
             SoundPlayer.play(Sound.coinCollected);
+        }
+
+        // Check Flag
+        int[] flagPos = LevelPanel.getTouchedBlockPos(getPosition(), Icon.FLAG);
+        if (flagPos[0] != -1 && flagPos[1] != -1) {
+            System.out.println("FLAG");
         }
     }
 }
