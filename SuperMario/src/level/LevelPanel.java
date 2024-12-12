@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import javax.swing.ActionMap;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,7 +35,7 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         initKeyBind();
 
-        Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length;
+        Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length + 15;
         Database.windowWidth = Settings.BLOCK_SIZE * LevelPanel.gameBoard.length + 35;
 
         setBounds(0, 0, Database.windowLength, Database.windowWidth);
@@ -71,7 +72,7 @@ public class LevelPanel extends JPanel implements KeyListener {
         for (int row = 0; row < gameBoard.length; row++) {
             for (int col = 0; col < gameBoard[0].length; col++) {
                 JLabel icon = gameBoard[row][col];
-                if (icon.getIcon() == Icon.WALL || icon.getIcon() == Icon.COIN) {
+                if (icon.getIcon() != null) {
                     icon.setBounds(
                         col * Settings.BLOCK_SIZE, row * Settings.BLOCK_SIZE,
                         Settings.BLOCK_SIZE, Settings.BLOCK_SIZE
@@ -172,7 +173,7 @@ public class LevelPanel extends JPanel implements KeyListener {
         return false;
     }
 
-    public static int[] getTouchedCoinPos(int[] position) {
+    public static int[] getTouchedBlockPos(int[] position, ImageIcon block) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;
         int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
@@ -181,16 +182,16 @@ public class LevelPanel extends JPanel implements KeyListener {
         boolean inMiddleCol = indexRowOffset != 0;
 
         // At Coin Block
-        if (gameBoard[indexPosRow][indexPosCol].getIcon() == Icon.COIN)
+        if (gameBoard[indexPosRow][indexPosCol].getIcon() == block)
             return new int[] { indexPosRow, indexPosCol };
         // Reaching from Top
-        else if (inMiddleRow && gameBoard[indexPosRow + 1][indexPosCol].getIcon() == Icon.COIN)
+        else if (inMiddleRow && gameBoard[indexPosRow + 1][indexPosCol].getIcon() == block)
             return new int[] { indexPosRow + 1, indexPosCol };
         // Reaching from Left
-        else if (inMiddleCol && gameBoard[indexPosRow][indexPosCol + 1].getIcon() == Icon.COIN)
+        else if (inMiddleCol && gameBoard[indexPosRow][indexPosCol + 1].getIcon() == block)
             return new int[] { indexPosRow, indexPosCol + 1 };
         // Reaching from Top Left
-        else if (inMiddleRow && inMiddleCol && gameBoard[indexPosRow + 1][indexPosCol + 1].getIcon() == Icon.COIN)
+        else if (inMiddleRow && inMiddleCol && gameBoard[indexPosRow + 1][indexPosCol + 1].getIcon() == block)
             return new int[] { indexPosRow + 1, indexPosCol + 1 };
         return new int[] { -1, -1 };
     }

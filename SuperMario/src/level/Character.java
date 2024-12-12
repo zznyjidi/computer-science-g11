@@ -116,7 +116,7 @@ public class Character extends JLabel implements ActionListener {
         setBounds(getX() + deltaX, getY() - deltaY, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
 
         // Collect Coin
-        int[] coinPos = LevelPanel.getTouchedCoinPos(getPosition());
+        int[] coinPos = LevelPanel.getTouchedBlockPos(getPosition(), Icon.COIN);
         if (coinPos[0] != -1 && coinPos[1] != -1) {
             LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
             Database.scoreDisplay.incrementScore(1);

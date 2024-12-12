@@ -18,11 +18,11 @@ public class Application {
         LevelPanel levelPanel = new LevelPanel(1);
         layeredPane.add(levelPanel, JLayeredPane.DEFAULT_LAYER);
 
-        // SoundPlayer.play(Sound.metalPipe);
-
         ScoreDisplay scoreDisplay = new ScoreDisplay();
         Database.scoreDisplay = scoreDisplay;
         layeredPane.add(scoreDisplay, JLayeredPane.PALETTE_LAYER);
+
+        // SoundPlayer.play(Sound.metalPipe);
 
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setSize(Database.windowLength, Database.windowWidth);
