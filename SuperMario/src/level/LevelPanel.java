@@ -10,6 +10,7 @@ import java.util.Scanner;
 import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -23,6 +24,8 @@ public class LevelPanel extends JPanel implements KeyListener {
     public static JLabel[][] gameBoard = new JLabel[20][25];
     public static JPanel levelPanel = new JPanel();
     public static Character character = new Character(Icon.characterIcon, new String[] { "a", "d", " " });
+    public static int[] startingPoint;
+    public static int currentLevel;
 
     public static Timer renderFrameTimer;
 
@@ -32,7 +35,6 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         loadLevel(level);
         initLevel();
-
         initKeyBind();
 
         Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length + 15;
@@ -43,6 +45,27 @@ public class LevelPanel extends JPanel implements KeyListener {
         renderFrameTimer = new Timer((1000 / Settings.RENDER_FRAME_LIMIT), character);
         renderFrameTimer.addActionListener(character);
         renderFrameTimer.start();
+    }
+
+    public void nextLevel() {
+        newLevel(currentLevel + 1);
+    }
+
+    public void newLevel(int level) {
+        remove(levelPanel);
+        levelPanel.removeKeyListener(this);
+
+        revalidate();
+        repaint();
+
+        levelPanel = new JPanel();
+
+        loadLevel(level);
+        initLevel();
+        initKeyBind();
+
+        revalidate();
+        repaint();
     }
 
     private void loadLevel(int level) {
@@ -56,14 +79,18 @@ public class LevelPanel extends JPanel implements KeyListener {
                         case 'B' -> new JLabel(Icon.WALL);
                         case 'C' -> new JLabel(Icon.COIN);
                         case 'F' -> new JLabel(Icon.FLAG);
+                        case 'S' -> {
+                            startingPoint = new int[] {row, col}; 
+                            yield new JLabel();
+                        }
                         default -> new JLabel();
                     };
                 }
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        currentLevel = level;
     }
 
     private void initLevel() {
@@ -83,18 +110,18 @@ public class LevelPanel extends JPanel implements KeyListener {
             }
         }
 
-        character.setBounds(25, 425, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
+        character.setBounds(
+            startingPoint[1] * Settings.BLOCK_SIZE, startingPoint[0] * Settings.BLOCK_SIZE, 
+            Settings.BLOCK_SIZE, Settings.BLOCK_SIZE
+        );
         levelPanel.add(character);
         levelPanel.setBounds(0, 0, Settings.BLOCK_SIZE * gameBoard[0].length, Settings.BLOCK_SIZE * gameBoard.length);
         add(levelPanel);
     }
 
     private void initKeyBind() {
-        ActionMap actionMap;
-        InputMap inputMap;
-
-        inputMap = levelPanel.getInputMap();
-        actionMap = levelPanel.getActionMap();
+        InputMap inputMap = levelPanel.getInputMap();
+        ActionMap actionMap = levelPanel.getActionMap();
 
         inputMap.put(KeyStroke.getKeyStroke(character.getKeyBind()[0].toCharArray()[0]), "MOVE_LEFT");
         actionMap.put("MOVE_LEFT", new KeyAction("MOVE_LEFT"));
@@ -104,6 +131,8 @@ public class LevelPanel extends JPanel implements KeyListener {
         actionMap.put("MOVE_JUMP", new KeyAction("MOVE_JUMP"));
 
         levelPanel.addKeyListener(this);
+        levelPanel.setFocusable(true);
+        levelPanel.requestFocusInWindow();
     }
 
     public static boolean getCollisionX(int[] position, int deltaX) {

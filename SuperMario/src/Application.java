@@ -16,6 +16,7 @@ public class Application {
         mainFrame.add(layeredPane);
 
         LevelPanel levelPanel = new LevelPanel(1);
+        Database.levelPanel = levelPanel;
         layeredPane.add(levelPanel, JLayeredPane.DEFAULT_LAYER);
 
         ScoreDisplay scoreDisplay = new ScoreDisplay();
