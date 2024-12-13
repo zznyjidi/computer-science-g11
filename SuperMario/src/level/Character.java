@@ -2,6 +2,7 @@ package level;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.Callable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -21,6 +22,9 @@ public class Character extends JLabel implements ActionListener {
 
     private boolean jumping;
 
+    private int gravityFactor = 1;
+    private Callable<int[]>[] physicsProcessor;
+
     /**
      * Character in Game
      * 
@@ -38,7 +42,6 @@ public class Character extends JLabel implements ActionListener {
     public ImageIcon[] getIcons() {
         return icons;
     }
-
     public void setIcons(ImageIcon[] icons) {
         this.icons = icons;
     }
@@ -46,15 +49,14 @@ public class Character extends JLabel implements ActionListener {
     public String[] getKeyBind() {
         return keyBind;
     }
-
     public void setKeyBind(String[] keyBind) {
         this.keyBind = keyBind;
+        Database.levelPanel.initKeyBind();
     }
 
     public int getDeltaX() {
         return deltaX;
     }
-
     public void setDeltaX(int deltaX) {
         this.deltaX = deltaX;
     }
@@ -62,7 +64,6 @@ public class Character extends JLabel implements ActionListener {
     public int getDeltaY() {
         return deltaY;
     }
-
     public void setDeltaY(int deltaY) {
         this.deltaY = deltaY;
     }
@@ -70,13 +71,19 @@ public class Character extends JLabel implements ActionListener {
     public boolean isJumping() {
         return jumping;
     }
-
     public void jump() {
-        if (LevelPanel.getCollisionY(getPosition(), -1) && !isJumping()) {
+        if (LevelPanel.getCollisionY(getPosition(), -gravityFactor) && !isJumping()) {
             SoundPlayer.play(Sound.jump);
             jumping = true;
-            deltaY = 10;
+            deltaY = 10 * gravityFactor;
         }
+    }
+
+    public int getGravityFactor() {
+        return gravityFactor;
+    }
+    public void setGravityFactor(int gravityFactor) {
+        this.gravityFactor = gravityFactor;
     }
 
     public void moveDirection(int directionX) {
@@ -94,10 +101,12 @@ public class Character extends JLabel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // Jumping and Falling
-        if (deltaY > 0)
-            deltaY--;
-        else if (!LevelPanel.getCollisionY(getPosition(), -1))
-            deltaY--;
+        if (gravityFactor * deltaY > 0)
+            deltaY -= gravityFactor;
+        else if (!LevelPanel.getCollisionY(getPosition(), -gravityFactor))
+            deltaY -= gravityFactor;
+
+        // Additional Physics Processing
 
         // Collision
         if (LevelPanel.getCollisionX(getPosition(), deltaX)) {
@@ -127,6 +136,7 @@ public class Character extends JLabel implements ActionListener {
         if (flagPos[0] != -1 && flagPos[1] != -1) {
             deltaX = 0;
             deltaY = 0;
+            gravityFactor = 1;
             jumping = false;
             Database.levelPanel.nextLevel();
         }

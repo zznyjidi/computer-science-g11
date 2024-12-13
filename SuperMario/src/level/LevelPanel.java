@@ -118,7 +118,7 @@ public class LevelPanel extends JPanel implements KeyListener {
         add(levelPanel);
     }
 
-    private void initKeyBind() {
+    public void initKeyBind() {
         InputMap inputMap = levelPanel.getInputMap();
         ActionMap actionMap = levelPanel.getActionMap();
 
