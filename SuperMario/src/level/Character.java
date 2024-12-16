@@ -2,13 +2,18 @@ package level;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Callable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import global.Database;
 import global.Settings;
+import physics.Collision;
+import physics.Gravity;
+import physics.PhysicsProcessor;
+import physics.PhysicsStatus;
 import sound.Sound;
 import sound.SoundPlayer;
 
@@ -17,14 +22,10 @@ public class Character extends JLabel implements ActionListener {
     private ImageIcon[] icons;
 
     private String[] keyBind;
-    private int deltaX;
-    private int deltaY;
 
-    private boolean jumping;
-
-    private int gravityFactor = 1;
-    private Callable<int[]>[] physicsProcessor;
-
+    private Collision collision;
+    private PhysicsStatus physicsStatus = new PhysicsStatus(1, 0, 0, false, getX(), getY());;
+    private List<PhysicsProcessor> physicsProcessors = new ArrayList<>();
     /**
      * Character in Game
      * 
@@ -36,6 +37,8 @@ public class Character extends JLabel implements ActionListener {
         this.icons = icons;
         this.keyBind = keyBind;
         setIcon(icons[0]);
+        this.collision = new Collision(LevelPanel.gameBoard);
+        this.physicsProcessors.add(new Gravity(collision));
     }
 
     // Getter & Setters
@@ -55,35 +58,35 @@ public class Character extends JLabel implements ActionListener {
     }
 
     public int getDeltaX() {
-        return deltaX;
+        return physicsStatus.getDeltaX();
     }
     public void setDeltaX(int deltaX) {
-        this.deltaX = deltaX;
+        physicsStatus.setDeltaX(deltaX);
     }
 
     public int getDeltaY() {
-        return deltaY;
+        return physicsStatus.getDeltaX();
     }
     public void setDeltaY(int deltaY) {
-        this.deltaY = deltaY;
+        physicsStatus.setDeltaY(deltaY);
     }
 
     public boolean isJumping() {
-        return jumping;
+        return physicsStatus.isJumping();
     }
     public void jump() {
-        if (LevelPanel.getCollisionY(getPosition(), -gravityFactor) && !isJumping()) {
+        if (collision.getCollisionY(getPosition(), -physicsStatus.getGravityFactor()) && !physicsStatus.isJumping()) {
             SoundPlayer.play(Sound.jump);
-            jumping = true;
-            deltaY = 10 * gravityFactor;
+            physicsStatus.setJumping(true);
+            physicsStatus.setDeltaY(10 * physicsStatus.getGravityFactor());
         }
     }
 
     public int getGravityFactor() {
-        return gravityFactor;
+        return physicsStatus.getGravityFactor();
     }
     public void setGravityFactor(int gravityFactor) {
-        this.gravityFactor = gravityFactor;
+        physicsStatus.setGravityFactor(gravityFactor);
     }
 
     public void moveDirection(int directionX) {
@@ -91,7 +94,7 @@ public class Character extends JLabel implements ActionListener {
             setIcon(icons[0]);
         else if (directionX < 0)
             setIcon(icons[2]);
-        deltaX = directionX;
+        physicsStatus.setDeltaX(directionX);
     }
 
     public int[] getPosition() {
@@ -100,28 +103,14 @@ public class Character extends JLabel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Jumping and Falling
-        if (gravityFactor * deltaY > 0)
-            deltaY -= gravityFactor;
-        else if (!LevelPanel.getCollisionY(getPosition(), -gravityFactor))
-            deltaY -= gravityFactor;
-
-        // Additional Physics Processing
-
-        // Collision
-        if (LevelPanel.getCollisionX(getPosition(), deltaX)) {
-            deltaX = 0;
+        // Process Physics
+        for (PhysicsProcessor processor : physicsProcessors) {
+            physicsStatus = processor.process(physicsStatus);
         }
-        if (LevelPanel.getCollisionY(getPosition(), deltaY)) {
-            deltaY = 0;
-            SoundPlayer.play(Sound.hitGround);
-        }
-
-        if (deltaY == 0)
-            jumping = false;
 
         // Move Character base on delta Value
-        setBounds(getX() + deltaX, getY() - deltaY, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
+        setBounds(getX() + physicsStatus.getDeltaX(), getY() - physicsStatus.getDeltaY(), Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
+        physicsStatus.update(getX(), getY());
 
         // Collect Coin
         int[] coinPos = LevelPanel.getTouchedBlockPos(getPosition(), Icon.COIN);
@@ -134,10 +123,7 @@ public class Character extends JLabel implements ActionListener {
         // Check Flag
         int[] flagPos = LevelPanel.getTouchedBlockPos(getPosition(), Icon.FLAG);
         if (flagPos[0] != -1 && flagPos[1] != -1) {
-            deltaX = 0;
-            deltaY = 0;
-            gravityFactor = 1;
-            jumping = false;
+            physicsStatus.reset();
             Database.levelPanel.nextLevel();
         }
     }
