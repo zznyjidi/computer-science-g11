@@ -63,6 +63,10 @@ public class PhysicsStatus {
                 + ", locationX=" + locationX + ", locationY=" + locationY + "]";
     }
 
+    public PhysicsStatus copy() {
+        return new PhysicsStatus(gravityFactor, deltaX, deltaY, jumping, locationX, locationY);
+    }
+
     public void update(int gravityFactor, int deltaX, int deltaY, boolean jumping, int locationX, int locationY) {
         this.gravityFactor = gravityFactor;
         this.deltaX = deltaX;
