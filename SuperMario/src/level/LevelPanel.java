@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import javax.swing.ActionMap;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -129,32 +128,11 @@ public class LevelPanel extends JPanel implements KeyListener {
         inputMap.put(KeyStroke.getKeyStroke(character.getKeyBind()[2].toCharArray()[0]), "MOVE_JUMP");
         actionMap.put("MOVE_JUMP", new KeyAction("MOVE_JUMP"));
 
+        // bugfix: key bind not working
+        // https://stackoverflow.com/questions/16530775/keylistener-not-working-for-jpanel
         levelPanel.addKeyListener(this);
         levelPanel.setFocusable(true);
         levelPanel.requestFocusInWindow();
-    }
-
-    public static int[] getTouchedBlockPos(int[] position, ImageIcon block) {
-        int indexPosRow = position[1] / Settings.BLOCK_SIZE;
-        int indexPosCol = position[0] / Settings.BLOCK_SIZE;
-        int indexRowOffset = position[1] % Settings.BLOCK_SIZE;
-        int indexColOffset = position[0] % Settings.BLOCK_SIZE;
-        boolean inMiddleRow = indexColOffset != 0;
-        boolean inMiddleCol = indexRowOffset != 0;
-
-        // At Coin Block
-        if (gameBoard[indexPosRow][indexPosCol].getIcon() == block)
-            return new int[] { indexPosRow, indexPosCol };
-        // Reaching from Top
-        else if (inMiddleRow && gameBoard[indexPosRow + 1][indexPosCol].getIcon() == block)
-            return new int[] { indexPosRow + 1, indexPosCol };
-        // Reaching from Left
-        else if (inMiddleCol && gameBoard[indexPosRow][indexPosCol + 1].getIcon() == block)
-            return new int[] { indexPosRow, indexPosCol + 1 };
-        // Reaching from Top Left
-        else if (inMiddleRow && inMiddleCol && gameBoard[indexPosRow + 1][indexPosCol + 1].getIcon() == block)
-            return new int[] { indexPosRow + 1, indexPosCol + 1 };
-        return new int[] { -1, -1 };
     }
 
     @Override

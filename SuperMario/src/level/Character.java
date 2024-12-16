@@ -14,6 +14,8 @@ import physics.Collision;
 import physics.Gravity;
 import physics.PhysicsProcessor;
 import physics.PhysicsStatus;
+import physics.BlockTrigger;
+import physics.TriggerAction;
 import sound.Sound;
 import sound.SoundPlayer;
 
@@ -26,6 +28,7 @@ public class Character extends JLabel implements ActionListener {
     private Collision collision;
     private PhysicsStatus physicsStatus = new PhysicsStatus(1, 0, 0, false, getX(), getY());;
     private List<PhysicsProcessor> physicsProcessors = new ArrayList<>();
+    private List<PhysicsProcessor> locationProcessors = new ArrayList<>();
     /**
      * Character in Game
      * 
@@ -39,6 +42,19 @@ public class Character extends JLabel implements ActionListener {
         setIcon(icons[0]);
         this.collision = new Collision(LevelPanel.gameBoard);
         this.physicsProcessors.add(new Gravity(collision));
+
+        TriggerAction collectCoin = (int[] coinPos) -> {
+            LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
+            Database.scoreDisplay.incrementScore(1);
+            SoundPlayer.play(Sound.coinCollected);
+        };
+        this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.COIN, collectCoin));
+
+        TriggerAction nextLevel = (int[] flagPos) -> {
+            physicsStatus.reset();
+            Database.levelPanel.nextLevel();
+        };
+        this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.FLAG, nextLevel));
     }
 
     // Getter & Setters
@@ -112,19 +128,9 @@ public class Character extends JLabel implements ActionListener {
         setBounds(getX() + physicsStatus.getDeltaX(), getY() - physicsStatus.getDeltaY(), Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
         physicsStatus.update(getX(), getY());
 
-        // Collect Coin
-        int[] coinPos = LevelPanel.getTouchedBlockPos(getPosition(), Icon.COIN);
-        if (coinPos[0] != -1 && coinPos[1] != -1) {
-            LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
-            Database.scoreDisplay.incrementScore(1);
-            SoundPlayer.play(Sound.coinCollected);
-        }
-
-        // Check Flag
-        int[] flagPos = LevelPanel.getTouchedBlockPos(getPosition(), Icon.FLAG);
-        if (flagPos[0] != -1 && flagPos[1] != -1) {
-            physicsStatus.reset();
-            Database.levelPanel.nextLevel();
+        // Process Triggers
+        for (PhysicsProcessor trigger : locationProcessors) {
+            physicsStatus = trigger.process(physicsStatus);
         }
     }
 }
