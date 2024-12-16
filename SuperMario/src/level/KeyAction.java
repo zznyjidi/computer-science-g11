@@ -11,7 +11,10 @@ public class KeyAction extends TextAction {
     public KeyAction(String key) {
         super(key);
         this.key = key;
+    }
 
+    public String getKey() {
+        return key;
     }
 
     @Override
@@ -28,5 +31,4 @@ public class KeyAction extends TextAction {
             character.jump();
         }
     }
-
 }
