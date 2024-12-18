@@ -44,7 +44,6 @@ public class HttpRequest {
             }
         });
         // End Request Body
-        request.writeBytes(HttpRequest.NEWLINE);
         request.writeBytes(HttpRequest.TWO_HYPHENS + HttpRequest.BOUNDARY + HttpRequest.TWO_HYPHENS + HttpRequest.NEWLINE);
         request.flush();
         request.close();
