@@ -5,10 +5,16 @@ import javax.swing.WindowConstants;
 import global.Database;
 import hud.ScoreDisplay;
 import level.LevelPanel;
+import online.Account;
+import replay.ReplayRecorder;
 
 public class Application {
 
     public static void main(String[] args) {
+        Database.account = new Account("test_user");
+        Database.account.login("uU55c1Y340XpLgJJHp74");
+        Database.replayRecorder = new ReplayRecorder();
+
         JFrame mainFrame = new JFrame();
         // mainFrame.setLayout(null);
 

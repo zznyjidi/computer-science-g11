@@ -33,7 +33,11 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         loadLevel(level);
         initLevel();
-        initKeyBind();
+        if (!Database.replayMode) {
+            initKeyBind();
+            if (Database.replayRecorder != null)
+                character.addTrigger(Database.replayRecorder);
+        }
 
         Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length + 15;
         Database.windowWidth = Settings.BLOCK_SIZE * LevelPanel.gameBoard.length + 35;
@@ -53,40 +57,52 @@ public class LevelPanel extends JPanel implements KeyListener {
         remove(levelPanel);
         levelPanel.removeKeyListener(this);
 
-        revalidate();
-        repaint();
-
+        character.defaultTrigger();
         levelPanel = new JPanel();
 
         loadLevel(level);
         initLevel();
-        initKeyBind();
+        if (!Database.replayMode) {
+            initKeyBind();
+            if (Database.replayRecorder != null)
+                character.addTrigger(Database.replayRecorder);
+        }
 
         revalidate();
         repaint();
     }
 
     private void loadLevel(int level) {
-        Scanner fileInput;
+        Scanner fileInput = null;
         try {
             fileInput = new Scanner(new File("levels/Level" + level + ".txt"));
-            for (int row = 0; row < gameBoard.length; row++) {
-                char[] lineArray = fileInput.next().toCharArray();
-                for (int col = 0; col < gameBoard[0].length; col++) {
-                    gameBoard[row][col] = switch (lineArray[col]) {
-                        case 'B' -> new JLabel(Icon.WALL);
-                        case 'C' -> new JLabel(Icon.COIN);
-                        case 'F' -> new JLabel(Icon.FLAG);
-                        case 'S' -> {
-                            startingPoint = new int[] {row, col}; 
-                            yield new JLabel();
-                        }
-                        default -> new JLabel();
-                    };
+            // Read until end of file
+            // https://dev.to/ezzeddinp/read-input-until-eof-end-of-file-and-number-your-lines-effortlessly-competitive-programming-java-1egb
+            for (int row = 0; fileInput.hasNext(); row++) {
+                String line = fileInput.nextLine();
+                if (line.startsWith("#")) {
+                    row--;
+                } else {
+                    char[] lineArray = line.toCharArray();
+                    for (int col = 0; col < gameBoard[0].length; col++) {
+                        gameBoard[row][col] = switch (lineArray[col]) {
+                            case 'B' -> new JLabel(Icon.WALL);
+                            case 'C' -> new JLabel(Icon.COIN);
+                            case 'F' -> new JLabel(Icon.FLAG);
+                            case 'S' -> {
+                                startingPoint = new int[] {row, col}; 
+                                yield new JLabel();
+                            }
+                            default -> new JLabel();
+                        };
+                    }
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            if (fileInput != null)
+                fileInput.close();
         }
         currentLevel = level;
     }

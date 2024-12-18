@@ -17,8 +17,9 @@ import network.HttpRequest;
 public class Account {
     private int uid;
     private String username;
-    private String authToken;
+    private String nickname;
 
+    private String authToken;
     private boolean loggedIn;
 
     public Account(String username) {
@@ -30,6 +31,9 @@ public class Account {
     }
     public String getUsername() {
         return username;
+    }
+    public String getNickname() {
+        return nickname;
     }
     public String getAuthToken() {
         return authToken;
@@ -52,6 +56,8 @@ public class Account {
             String responds = HttpRequest.getRespond(connection);
             JSONObject respondJson = new JSONObject(responds);
             this.uid = (Integer) respondJson.get("uid");
+            this.nickname = "";
+            this.authToken = "";
             this.loggedIn = true;
         } catch (MalformedURLException e) {
             // Protocol Not Supported
@@ -80,10 +86,10 @@ public class Account {
         return "Account [uid=" + uid + ", username=" + username + ", loggedIn=" + loggedIn + "]";
     }
 
-    public static void main(String[] args) {
-        Settings.scoreServerAddr = new String[] { "http", "127.0.0.1:8080" };
-        Account account = new Account("testuser1");
-        account.login("password");
-        System.out.println(account);
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("uid", this.uid);
+        json.put("nickname", this.nickname);
+        return json;
     }
 }

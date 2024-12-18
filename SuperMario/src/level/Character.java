@@ -2,20 +2,28 @@ package level;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import org.json.JSONObject;
+
 import global.Database;
 import global.Settings;
+import physics.BlockTrigger;
 import physics.Collision;
 import physics.Gravity;
 import physics.PhysicsProcessor;
 import physics.PhysicsStatus;
-import physics.BlockTrigger;
 import physics.TriggerAction;
+import replay.ExportReplay;
 import sound.Sound;
 import sound.SoundPlayer;
 
@@ -24,6 +32,8 @@ public class Character extends JLabel implements ActionListener {
     private ImageIcon[] icons;
 
     private String[] keyBind;
+
+    private boolean triggerNextLevel = false;
 
     private Collision collision;
     private PhysicsStatus physicsStatus = new PhysicsStatus(1, 0, 0, false, getX(), getY());;
@@ -43,18 +53,7 @@ public class Character extends JLabel implements ActionListener {
         this.collision = new Collision(LevelPanel.gameBoard);
         this.physicsProcessors.add(new Gravity(collision));
 
-        TriggerAction collectCoin = (int[] coinPos, PhysicsStatus status) -> {
-            LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
-            Database.scoreDisplay.incrementScore(1);
-            SoundPlayer.play(Sound.coinCollected);
-        };
-        this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.COIN, collectCoin));
-
-        TriggerAction nextLevel = (int[] flagPos, PhysicsStatus status) -> {
-            physicsStatus.reset();
-            Database.levelPanel.nextLevel();
-        };
-        this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.FLAG, nextLevel));
+        defaultTrigger();
     }
 
     // Getter & Setters
@@ -117,6 +116,59 @@ public class Character extends JLabel implements ActionListener {
         return new int[] { getX(), getY() };
     }
 
+    public void addTrigger(PhysicsProcessor trigger) {
+        locationProcessors.add(trigger);
+    }
+    public void removeTrigger(PhysicsProcessor trigger) {
+        locationProcessors.remove(trigger);
+    }
+    public void clearTrigger() {
+        locationProcessors.clear();
+    }
+    public void defaultTrigger() {
+        clearTrigger();
+        // Collect Coin
+        TriggerAction collectCoin = (int[] coinPos, PhysicsStatus status) -> {
+            LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
+            Database.scoreDisplay.incrementScore(1);
+            SoundPlayer.play(Sound.coinCollected);
+        };
+        this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.COIN, collectCoin));
+
+        // Target Flag
+        TriggerAction nextLevel = (int[] flagPos, PhysicsStatus status) -> {
+            LevelPanel.renderFrameTimer.stop();
+            physicsStatus.reset();
+            if (Database.replayRecorder != null) {
+                JSONObject replay = ExportReplay.export(
+                    LevelPanel.currentLevel, Database.scoreDisplay.getScore(), Database.scoreDisplay.getTime(), 
+                    Database.account, Database.replayRecorder
+                );
+                // Format Current Time
+                // https://stackoverflow.com/questions/23068676/how-to-get-current-timestamp-in-string-format-in-java-yyyy-mm-dd-hh-mm-ss
+                String fileName = "replay/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")) + ".json";
+                // Write to Json File
+                // https://stackoverflow.com/questions/57913106/append-to-jsonobject-write-object-to-file-using-org-json-for-java
+                try {
+                    // Create File
+                    // https://www.baeldung.com/java-how-to-create-a-file
+                    File replayFile = new File(fileName);
+                    replayFile.createNewFile();
+                    PrintWriter replayFileWriter = new PrintWriter(replayFile, "UTF-8");
+                    replayFileWriter.println(replay.toString());
+                    replayFileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Database.replayRecorder.reset();
+            }
+            Database.scoreDisplay.reset();
+            this.triggerNextLevel = true;
+            LevelPanel.renderFrameTimer.start();
+        };
+        this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.FLAG, nextLevel));
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         // Process Physics
@@ -131,6 +183,13 @@ public class Character extends JLabel implements ActionListener {
         // Process Triggers
         for (PhysicsProcessor trigger : locationProcessors) {
             physicsStatus = trigger.process(physicsStatus);
+        }
+
+        // Trigger Next Level if needed
+        // bugfix: java.util.ConcurrentModificationException
+        if (this.triggerNextLevel) {
+            Database.levelPanel.nextLevel();
+            this.triggerNextLevel = false;
         }
     }
 }

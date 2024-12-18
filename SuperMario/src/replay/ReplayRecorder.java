@@ -22,15 +22,19 @@ public class ReplayRecorder implements physics.PhysicsProcessor {
         JSONArray json = new JSONArray();
         for (PhysicsStatus physicsStatus : frames) {
             JSONObject jsonFrame = new JSONObject();
-            jsonFrame.append("deltaX", physicsStatus.getDeltaX());
-            jsonFrame.append("deltaY", physicsStatus.getDeltaY());
-            jsonFrame.append("gravityFactor", physicsStatus.getGravityFactor());
-            jsonFrame.append("jumping", physicsStatus.isJumping());
-            jsonFrame.append("posX", physicsStatus.getLocationX());
-            jsonFrame.append("posY", physicsStatus.getLocationY());
+            jsonFrame.put("deltaX", physicsStatus.getDeltaX());
+            jsonFrame.put("deltaY", physicsStatus.getDeltaY());
+            jsonFrame.put("gravityFactor", physicsStatus.getGravityFactor());
+            jsonFrame.put("jumping", physicsStatus.isJumping());
+            jsonFrame.put("posX", physicsStatus.getLocationX());
+            jsonFrame.put("posY", physicsStatus.getLocationY());
             json.put(jsonFrame);
         }
         return json;
+    }
+
+    public void reset() {
+        frames.clear();
     }
 
 }

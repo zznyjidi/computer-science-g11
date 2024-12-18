@@ -1,5 +1,7 @@
 package physics;
 
+import java.util.Arrays;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -49,4 +51,41 @@ public class BlockTrigger implements PhysicsProcessor {
         }
         return currentStatus;
     }
+
+    // Generated hashCode and equals for map and list
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.deepHashCode(gameBoard);
+        result = prime * result + ((targetBlock == null) ? 0 : targetBlock.hashCode());
+        result = prime * result + ((action == null) ? 0 : action.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        BlockTrigger other = (BlockTrigger) obj;
+        if (!Arrays.deepEquals(gameBoard, other.gameBoard))
+            return false;
+        if (targetBlock == null) {
+            if (other.targetBlock != null)
+                return false;
+        } else if (!targetBlock.equals(other.targetBlock))
+            return false;
+        if (action == null) {
+            if (other.action != null)
+                return false;
+        } else if (!action.equals(other.action))
+            return false;
+        return true;
+    }
+
+    
 }

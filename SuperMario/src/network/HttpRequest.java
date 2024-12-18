@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
@@ -67,17 +66,5 @@ public class HttpRequest {
         connection.disconnect();
 
         return stringBuilder.toString();
-    }
-
-    public static void main(String[] args) {
-        try {
-            String respond = getRespond(HttpRequest.post(new URI("http://127.0.0.1:8080/return/403").toURL(), Map.ofEntries(
-                Map.entry("key1", "value1"),
-                Map.entry("key2", "value2")
-            )));
-            System.out.println(respond);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -37,8 +37,23 @@ public class ScoreDisplay extends JPanel implements ActionListener {
         Database.levelTimer = new Timer(10, this);
     }
 
+    // Timer & Score Control
     public void startTimer() {
         Database.levelTimer.start();
+    }
+    public void stopTimer() {
+        Database.levelTimer.stop();
+    }
+    public void reset() {
+        timerTime = new int[] {0, 0, 0};
+        score = 0;
+    }
+    // Getters
+    public int getTime() {
+        return timerTime[2] + timerTime[1] * 100 + timerTime[0] * 100 * 60;
+    }
+    public int getScore() {
+        return score;
     }
 
     @Override

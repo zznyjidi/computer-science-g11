@@ -1,15 +1,15 @@
 package replay;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+import online.Account;
+
 public class ExportReplay {
-    static JSONObject export(int levelID, int score, int time, JSONArray replayFrames) {
+    public static JSONObject export(int levelID, int score, int time, Account player, ReplayRecorder recorder) {
         JSONObject json = new JSONObject();
 
         // Player Section of the Json
-        JSONObject playerJson = new JSONObject();
-        json.put("player", playerJson);
+        json.put("player", player.toJSON());
 
         // Info Section of the Json
         JSONObject infoJson = new JSONObject();
@@ -19,7 +19,7 @@ public class ExportReplay {
         json.put("info", infoJson);
 
         // Replay Section of the Json
-        json.put("replay", replayFrames);
+        json.put("replay", recorder.toJSON());
 
         return json;
     }
