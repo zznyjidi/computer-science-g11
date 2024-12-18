@@ -43,14 +43,14 @@ public class Character extends JLabel implements ActionListener {
         this.collision = new Collision(LevelPanel.gameBoard);
         this.physicsProcessors.add(new Gravity(collision));
 
-        TriggerAction collectCoin = (int[] coinPos) -> {
+        TriggerAction collectCoin = (int[] coinPos, PhysicsStatus status) -> {
             LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
             Database.scoreDisplay.incrementScore(1);
             SoundPlayer.play(Sound.coinCollected);
         };
         this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.COIN, collectCoin));
 
-        TriggerAction nextLevel = (int[] flagPos) -> {
+        TriggerAction nextLevel = (int[] flagPos, PhysicsStatus status) -> {
             physicsStatus.reset();
             Database.levelPanel.nextLevel();
         };

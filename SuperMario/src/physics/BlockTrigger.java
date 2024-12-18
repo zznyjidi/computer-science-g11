@@ -45,7 +45,7 @@ public class BlockTrigger implements PhysicsProcessor {
     public PhysicsStatus process(PhysicsStatus currentStatus) {
         int[] blockPos = getTouchedBlockPos(currentStatus.getPosition(), this.targetBlock);
         if (blockPos[0] != -1 && blockPos[1] != -1) {
-            this.action.action(blockPos);
+            this.action.action(blockPos, currentStatus);
         }
         return currentStatus;
     }
