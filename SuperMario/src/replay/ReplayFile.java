@@ -32,15 +32,18 @@ public class ReplayFile {
         return json;
     }
 
-    public static List<PhysicsStatus> load(File replayJson) throws FileNotFoundException {
+    public static JSONObject load(File replayJson) throws FileNotFoundException {
         // Read File with String Builder
         StringBuilder fileContent = new StringBuilder();
         try (Scanner file = new Scanner(replayJson)) {
             for (;file.hasNextLine(); fileContent.append(file.nextLine() + "\n"));
         }
         // Convert File to Json
-        JSONObject replayFile = new JSONObject(fileContent.toString());
-        JSONArray frameArray = replayFile.getJSONArray("replay");
+        return new JSONObject(fileContent.toString());
+    }
+
+    public static List<PhysicsStatus> load_frame(File replayJson) throws FileNotFoundException {
+        JSONArray frameArray = load(replayJson).getJSONArray("replay");
         // Create Frame List
         List<PhysicsStatus> frames = new ArrayList<>();
         for (Object frame : frameArray) {
