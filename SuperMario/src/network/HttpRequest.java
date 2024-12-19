@@ -10,16 +10,34 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 public class HttpRequest {
     static final String BOUNDARY = "*****";
     static final String NEWLINE = "\r\n";
     static final String TWO_HYPHENS = "--";
 
-    public static HttpURLConnection post(URL requestUrl, Map<String, Object> bodyValues) throws IOException {
+    public static HttpURLConnection post(URL requestUrl) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         // Set Request Info
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
+        return connection;
+    }
+
+    public static HttpURLConnection post_json (URL requestUrl, JSONObject json) throws IOException {
+        HttpURLConnection connection = post(requestUrl);
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
+        DataOutputStream request = new DataOutputStream(connection.getOutputStream());
+        request.writeBytes(json.toString());
+        request.flush();
+        request.close();
+        return connection;
+    }
+
+    public static HttpURLConnection post_form(URL requestUrl, Map<String, Object> bodyValues) throws IOException {
+        HttpURLConnection connection = post(requestUrl);
         connection.setRequestProperty(
             "Content-Type", "multipart/form-data;boundary=" + HttpRequest.BOUNDARY);
         // Send Request
@@ -53,7 +71,14 @@ public class HttpRequest {
 
     public static String getRespond(HttpURLConnection connection) throws IOException {
         // Read Respond from connection
-        InputStream responseStream = new BufferedInputStream(connection.getInputStream());
+        InputStream responseStream;
+        // Select Reader base on Status
+        // https://stackoverflow.com/questions/25011927/how-to-get-response-body-using-httpurlconnection-when-code-other-than-2xx-is-re
+        if (100 <= connection.getResponseCode() && connection.getResponseCode() <= 399) {
+            responseStream = new BufferedInputStream(connection.getInputStream());
+        } else {
+            responseStream = new BufferedInputStream(connection.getErrorStream());
+        }
         BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
 
         String line = "";

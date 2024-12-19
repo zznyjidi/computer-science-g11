@@ -157,6 +157,7 @@ public class Character extends JLabel implements ActionListener {
                     PrintWriter replayFileWriter = new PrintWriter(replayFile, "UTF-8");
                     replayFileWriter.println(replay.toString());
                     replayFileWriter.close();
+                    Database.account.submitScore(replay);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

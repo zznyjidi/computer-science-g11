@@ -50,12 +50,12 @@ public class Account {
                 Settings.scoreServerAddr[1],
                 Settings.scoreServerFeature.get("user-login"),
                 null, null).toURL();
-            HttpURLConnection connection = HttpRequest.post(url, Map.ofEntries(
+            HttpURLConnection connection = HttpRequest.post_form(url, Map.ofEntries(
                 Map.entry("username", username),
                 Map.entry("password", password)));
             String responds = HttpRequest.getRespond(connection);
             JSONObject respondJson = new JSONObject(responds);
-            this.uid = (Integer) respondJson.get("uid");
+            this.uid = (int) respondJson.get("uid");
             this.nickname = "";
             this.authToken = "";
             this.loggedIn = true;
@@ -91,5 +91,22 @@ public class Account {
         json.put("uid", this.uid);
         json.put("nickname", this.nickname);
         return json;
+    }
+
+    public int submitScore(JSONObject replay) {
+        try {
+            URL url = new URI(
+                Settings.scoreServerAddr[0],
+                Settings.scoreServerAddr[1],
+                Settings.scoreServerFeature.get("score-submit"),
+                "uid=" + uid, null).toURL();
+            HttpURLConnection connection = HttpRequest.post_json(url, replay);
+            JSONObject respond = new JSONObject(HttpRequest.getRespond(connection));
+            return (int) respond.get("replay_uid");
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+            System.err.println("Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
+        }
+        return -1;
     }
 }
