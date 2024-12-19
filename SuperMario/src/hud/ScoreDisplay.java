@@ -29,12 +29,15 @@ public class ScoreDisplay extends JPanel implements ActionListener {
         scoreLabel.setForeground(Settings.TEXT_COLOR);
         this.add(scoreLabel);
 
-        timerLabel = new JLabel();
+        timerLabel = new JLabel("000");
         timerLabel.setBounds(30, 40, 100, 10);
         timerLabel.setForeground(Settings.TEXT_COLOR);
         this.add(timerLabel);
 
         Database.levelTimer = new Timer(10, this);
+
+        revalidate();
+        repaint();
     }
 
     // Timer & Score Control

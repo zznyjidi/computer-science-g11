@@ -10,35 +10,39 @@ import global.Database;
 import hud.ScoreDisplay;
 import level.LevelPanel;
 
-public class PanelManager extends JLayeredPane {
+public class PanelManager {
     private Map<Integer, JPanel> panels = new HashMap<>();
     private Map<String, JPanel> taggedPanels = new HashMap<>();
-
-    public PanelManager() {
-        super();
-        taggedPanels.put("level", new LevelPanel());
-        Database.levelPanel = (LevelPanel) taggedPanels.get("level");
-        
-        taggedPanels.put("score-hud", new ScoreDisplay());
-        Database.scoreDisplay = (ScoreDisplay) taggedPanels.get("score-hud");
-    }
+    JLayeredPane layeredPane = new JLayeredPane();
 
     public void switchPanel(JPanel panel, int layer) {
         try {
-            remove(panels.get(layer));
+            layeredPane.remove(panels.get(layer));
         } catch (NullPointerException e) {
         }
         panels.put(layer, panel);
-        add(panels.get(layer), layer);
+        layeredPane.add(panels.get(layer), layer);
+    }
+
+    public JLayeredPane getLayeredPane() {
+        return layeredPane;
     }
 
     public void useLevel(int level) {
+        if (taggedPanels.get("level") == null) {
+            taggedPanels.put("level", new LevelPanel());
+            Database.levelPanel = (LevelPanel) taggedPanels.get("level");
+        }
         LevelPanel levelPanel = (LevelPanel) taggedPanels.get("level");
         switchPanel(levelPanel, JLayeredPane.DEFAULT_LAYER);
         levelPanel.newLevel(level);
     }
 
     public void useScoreDisplay() {
+        if (taggedPanels.get("score-hud") == null) {
+            taggedPanels.put("score-hud", new ScoreDisplay());
+            Database.scoreDisplay = (ScoreDisplay) taggedPanels.get("score-hud");
+        }
         ScoreDisplay scoreDisplay = (ScoreDisplay) taggedPanels.get("score-hud");
         switchPanel(scoreDisplay, JLayeredPane.PALETTE_LAYER);
     }

@@ -28,7 +28,6 @@ public class LevelPanel extends JPanel implements KeyListener {
     public static Timer renderFrameTimer;
 
     public LevelPanel(int level) {
-
         setLayout(null);
 
         newLevel(level);
@@ -43,8 +42,8 @@ public class LevelPanel extends JPanel implements KeyListener {
 
     public LevelPanel() {
         setLayout(null);
-        loadLevel(1);
 
+        loadLevel(1);
         Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length + 15;
         Database.windowWidth = Settings.BLOCK_SIZE * LevelPanel.gameBoard.length + 35;
         setBounds(0, 0, Database.windowLength, Database.windowWidth);
