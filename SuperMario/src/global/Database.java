@@ -1,10 +1,13 @@
 package global;
 
+import java.util.List;
+
 import javax.swing.Timer;
 
 import hud.ScoreDisplay;
 import level.LevelPanel;
 import online.Account;
+import physics.PhysicsStatus;
 import replay.ReplayRecorder;
 
 public class Database {
@@ -17,6 +20,7 @@ public class Database {
     public static int windowLength;
 
     public static boolean replayMode = false;
+    public static List<PhysicsStatus> loadedReplay;
 
     public static Account account;
 }

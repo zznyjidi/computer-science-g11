@@ -35,6 +35,10 @@ public class Character extends JLabel implements ActionListener {
 
     private boolean triggerNextLevel = false;
 
+    private int cachedDeltaX = 0;
+    private int cachedDeltaY = 0;
+    private boolean cachedJump = false;
+
     private Collision collision;
     private PhysicsStatus physicsStatus = new PhysicsStatus(1, 0, 0, false, getX(), getY());;
     private List<PhysicsProcessor> physicsProcessors = new ArrayList<>();
@@ -76,6 +80,7 @@ public class Character extends JLabel implements ActionListener {
         return physicsStatus.getDeltaX();
     }
     public void setDeltaX(int deltaX) {
+        cachedDeltaX = deltaX;
         physicsStatus.setDeltaX(deltaX);
     }
 
@@ -83,6 +88,7 @@ public class Character extends JLabel implements ActionListener {
         return physicsStatus.getDeltaX();
     }
     public void setDeltaY(int deltaY) {
+        cachedDeltaY = deltaY;
         physicsStatus.setDeltaY(deltaY);
     }
 
@@ -92,8 +98,8 @@ public class Character extends JLabel implements ActionListener {
     public void jump() {
         if (collision.getCollisionY(getPosition(), -physicsStatus.getGravityFactor()) && !physicsStatus.isJumping()) {
             SoundPlayer.play(Sound.jump);
-            physicsStatus.setJumping(true);
-            physicsStatus.setDeltaY(10 * physicsStatus.getGravityFactor());
+            cachedJump = true;
+            cachedDeltaY = 10 * physicsStatus.getGravityFactor();
         }
     }
 
@@ -109,7 +115,7 @@ public class Character extends JLabel implements ActionListener {
             setIcon(icons[0]);
         else if (directionX < 0)
             setIcon(icons[2]);
-        physicsStatus.setDeltaX(directionX);
+        cachedDeltaX = directionX;
     }
 
     public int[] getPosition() {
@@ -172,6 +178,11 @@ public class Character extends JLabel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Process Cached Data
+        physicsStatus.setDeltaX(cachedDeltaX);
+        physicsStatus.setDeltaY(cachedDeltaY);
+        physicsStatus.setJumping(cachedJump);
+
         // Process Physics
         for (PhysicsProcessor processor : physicsProcessors) {
             physicsStatus = processor.process(physicsStatus);
@@ -192,5 +203,10 @@ public class Character extends JLabel implements ActionListener {
             Database.levelPanel.nextLevel();
             this.triggerNextLevel = false;
         }
+
+        // Write New Caches
+        cachedDeltaX = physicsStatus.getDeltaX();
+        cachedDeltaY = physicsStatus.getDeltaY();
+        cachedJump = physicsStatus.isJumping();
     }
 }
