@@ -31,22 +31,25 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         setLayout(null);
 
-        loadLevel(level);
-        initLevel();
-        if (!Database.replayMode) {
-            initKeyBind();
-            if (Database.replayRecorder != null)
-                character.addTrigger(Database.replayRecorder);
-        }
+        newLevel(level);
 
         Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length + 15;
         Database.windowWidth = Settings.BLOCK_SIZE * LevelPanel.gameBoard.length + 35;
-
         setBounds(0, 0, Database.windowLength, Database.windowWidth);
 
         renderFrameTimer = new Timer((1000 / Settings.RENDER_FRAME_LIMIT), character);
-        renderFrameTimer.addActionListener(character);
         renderFrameTimer.start();
+    }
+
+    public LevelPanel() {
+        setLayout(null);
+        loadLevel(1);
+
+        Database.windowLength = Settings.BLOCK_SIZE * LevelPanel.gameBoard[0].length + 15;
+        Database.windowWidth = Settings.BLOCK_SIZE * LevelPanel.gameBoard.length + 35;
+        setBounds(0, 0, Database.windowLength, Database.windowWidth);
+
+        renderFrameTimer = new Timer((1000 / Settings.RENDER_FRAME_LIMIT), character);
     }
 
     public void nextLevel() {
@@ -70,6 +73,9 @@ public class LevelPanel extends JPanel implements KeyListener {
 
         revalidate();
         repaint();
+
+        if (!renderFrameTimer.isRunning())
+            renderFrameTimer.start();
     }
 
     private void loadLevel(int level) {

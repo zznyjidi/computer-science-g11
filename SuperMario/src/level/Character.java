@@ -23,7 +23,7 @@ import physics.Gravity;
 import physics.PhysicsProcessor;
 import physics.PhysicsStatus;
 import physics.TriggerAction;
-import replay.ExportReplay;
+import replay.ReplayFile;
 import sound.Sound;
 import sound.SoundPlayer;
 
@@ -140,7 +140,7 @@ public class Character extends JLabel implements ActionListener {
             LevelPanel.renderFrameTimer.stop();
             physicsStatus.reset();
             if (Database.replayRecorder != null) {
-                JSONObject replay = ExportReplay.export(
+                JSONObject replay = ReplayFile.export(
                     LevelPanel.currentLevel, Database.scoreDisplay.getScore(), Database.scoreDisplay.getTime(), 
                     Database.account, Database.replayRecorder
                 );

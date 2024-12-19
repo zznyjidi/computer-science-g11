@@ -5,6 +5,7 @@ import javax.swing.WindowConstants;
 import global.Database;
 import global.Settings;
 import hud.ScoreDisplay;
+import interfaces.PanelManager;
 import level.LevelPanel;
 import online.Account;
 import replay.ReplayRecorder;
@@ -20,16 +21,16 @@ public class Application {
         JFrame mainFrame = new JFrame();
         // mainFrame.setLayout(null);
 
-        JLayeredPane layeredPane = new JLayeredPane();
-        mainFrame.add(layeredPane);
+        PanelManager manager = new PanelManager();
+        mainFrame.add(manager);
 
         LevelPanel levelPanel = new LevelPanel(1);
         Database.levelPanel = levelPanel;
-        layeredPane.add(levelPanel, JLayeredPane.DEFAULT_LAYER);
+        manager.switchPanel(levelPanel, JLayeredPane.DEFAULT_LAYER);
 
         ScoreDisplay scoreDisplay = new ScoreDisplay();
         Database.scoreDisplay = scoreDisplay;
-        layeredPane.add(scoreDisplay, JLayeredPane.PALETTE_LAYER);
+        manager.switchPanel(scoreDisplay, JLayeredPane.PALETTE_LAYER);
 
         // SoundPlayer.play(Sound.metalPipe);
 
