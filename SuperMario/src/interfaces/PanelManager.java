@@ -20,8 +20,13 @@ public class PanelManager {
             layeredPane.remove(panels.get(layer));
         } catch (NullPointerException e) {
         }
-        panels.put(layer, panel);
-        layeredPane.add(panels.get(layer), layer);
+        try {
+            panels.put(layer, panel);
+            layeredPane.add(panels.get(layer), layer);
+        } catch (NullPointerException e) {
+        }
+        layeredPane.revalidate();
+        layeredPane.repaint();
     }
 
     public JLayeredPane getLayeredPane() {
@@ -30,8 +35,9 @@ public class PanelManager {
 
     public void useLevel(int level) {
         if (taggedPanels.get("level") == null) {
-            taggedPanels.put("level", new LevelPanel());
-            Database.levelPanel = (LevelPanel) taggedPanels.get("level");
+            if (Database.levelPanel == null)
+                Database.levelPanel = new LevelPanel();
+            taggedPanels.put("level", Database.levelPanel);
         }
         LevelPanel levelPanel = (LevelPanel) taggedPanels.get("level");
         switchPanel(levelPanel, JLayeredPane.DEFAULT_LAYER);
@@ -40,8 +46,9 @@ public class PanelManager {
 
     public void useScoreDisplay() {
         if (taggedPanels.get("score-hud") == null) {
-            taggedPanels.put("score-hud", new ScoreDisplay());
-            Database.scoreDisplay = (ScoreDisplay) taggedPanels.get("score-hud");
+            if (Database.scoreDisplay == null)
+                Database.scoreDisplay = new ScoreDisplay();
+            taggedPanels.put("score-hud", Database.scoreDisplay);
         }
         ScoreDisplay scoreDisplay = (ScoreDisplay) taggedPanels.get("score-hud");
         switchPanel(scoreDisplay, JLayeredPane.PALETTE_LAYER);

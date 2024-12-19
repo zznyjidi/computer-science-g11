@@ -9,7 +9,7 @@ public class Settings {
     public final static int COLLISION_OFFSET_THRESHOLD = 4;
     public static String timerDisplayFormat = "%02d:%02d:%02d";
 
-    public final static Color TEXT_COLOR = new Color(0, 0, 0);
+    public final static Color TEXT_COLOR = new Color(0x000000);
 
     public static String[] scoreServerAddr = new String[] {"https", "score.zzny.fun"};
     public static Map<String, String> scoreServerFeature = Map.ofEntries(

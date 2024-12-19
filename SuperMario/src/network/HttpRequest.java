@@ -17,6 +17,14 @@ public class HttpRequest {
     static final String NEWLINE = "\r\n";
     static final String TWO_HYPHENS = "--";
 
+    public static HttpURLConnection get(URL requestUrl) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+        // Set Request Info
+        connection.setRequestMethod("GET");
+        connection.connect();
+        return connection;
+    }
+
     public static HttpURLConnection post(URL requestUrl) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         // Set Request Info
