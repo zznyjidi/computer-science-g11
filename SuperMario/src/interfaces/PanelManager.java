@@ -15,15 +15,17 @@ public class PanelManager {
     private Map<String, JPanel> taggedPanels = new HashMap<>();
     JLayeredPane layeredPane = new JLayeredPane();
 
-    public void switchPanel(JPanel panel, int layer) {
+    public void switchPanel(JPanel panel, Integer layer) {
         try {
             layeredPane.remove(panels.get(layer));
         } catch (NullPointerException e) {
+            //e.printStackTrace();
         }
         try {
             panels.put(layer, panel);
             layeredPane.add(panels.get(layer), layer);
         } catch (NullPointerException e) {
+            //e.printStackTrace();
         }
         layeredPane.revalidate();
         layeredPane.repaint();

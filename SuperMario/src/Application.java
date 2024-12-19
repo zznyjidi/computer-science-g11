@@ -16,6 +16,7 @@ public class Application {
         Database.replayRecorder = new ReplayRecorder();
 
         JFrame mainFrame = new JFrame();
+        mainFrame.setVisible(true);
         // mainFrame.setLayout(null);
 
         PanelManager manager = new PanelManager();
@@ -27,7 +28,6 @@ public class Application {
 
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setSize(Database.windowLength, Database.windowWidth);
-        mainFrame.setVisible(true);
 
         mainFrame.revalidate();
         mainFrame.repaint();
