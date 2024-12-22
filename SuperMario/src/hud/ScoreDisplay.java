@@ -50,6 +50,7 @@ public class ScoreDisplay extends JPanel implements ActionListener {
     public void reset() {
         timerTime = new int[] {0, 0, 0};
         score = 0;
+        scoreLabel.setText(String.format("%03d", score));
     }
     // Getters
     public int getTime() {
