@@ -2,18 +2,11 @@ package level;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-
-import org.json.JSONObject;
 
 import global.Database;
 import global.Settings;
@@ -165,28 +158,7 @@ public class Character extends JLabel implements ActionListener {
             LevelPanel.renderFrameTimer.stop();
             physicsStatus.reset();
             if (Database.replayRecorder != null) {
-                JSONObject replay = ReplayFile.export(
-                    LevelPanel.currentLevel, Database.scoreDisplay.getScore(), Database.scoreDisplay.getTime(), 
-                    Database.account, Database.replayRecorder
-                );
-                // Format Current Time
-                // https://stackoverflow.com/questions/23068676/how-to-get-current-timestamp-in-string-format-in-java-yyyy-mm-dd-hh-mm-ss
-                String fileName = "replay/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")) + ".json";
-                // Write to Json File
-                // https://stackoverflow.com/questions/57913106/append-to-jsonobject-write-object-to-file-using-org-json-for-java
-                try {
-                    // Create File
-                    // https://www.baeldung.com/java-how-to-create-a-file
-                    File replayFile = new File(fileName);
-                    replayFile.createNewFile();
-                    PrintWriter replayFileWriter = new PrintWriter(replayFile, "UTF-8");
-                    replayFileWriter.println(replay.toString());
-                    replayFileWriter.close();
-                    Database.account.submitScore(replay);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Database.replayRecorder.reset();
+                ReplayFile.exportFileDefault();
             }
             Database.scoreDisplay.reset();
             this.triggerNextLevel = true;
