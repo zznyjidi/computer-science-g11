@@ -26,7 +26,7 @@ public class ReplayPlayer implements PhysicsProcessor {
     @Override
     public PhysicsStatus process(PhysicsStatus currentStatus) {
         frameCounter++;
-        return getValidFrame();
+        return getValidFrame().copy();
     }
 
     private PhysicsStatus getValidFrame() {
