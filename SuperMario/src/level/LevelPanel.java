@@ -67,7 +67,7 @@ public class LevelPanel extends JPanel implements KeyListener {
         if (!Database.replayMode) {
             initKeyBind();
             if (Database.replayRecorder != null)
-                character.addTrigger(Database.replayRecorder);
+                character.addProcessor(Database.replayRecorder, Character.TRIGGER_QUEUE);
         }
 
         revalidate();

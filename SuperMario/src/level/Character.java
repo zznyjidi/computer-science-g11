@@ -28,7 +28,11 @@ import sound.Sound;
 import sound.SoundPlayer;
 
 public class Character extends JLabel implements ActionListener {
+    // Class Constants
+    public static final int PHYSICS_QUEUE = 0;
+    public static final int TRIGGER_QUEUE = 1;
 
+    // Felids
     private ImageIcon[] icons;
 
     private String[] keyBind;
@@ -39,7 +43,8 @@ public class Character extends JLabel implements ActionListener {
     private int cachedDeltaY = 0;
     private boolean cachedJump = false;
 
-    private Collision collision;
+    private Collision collision = new Collision(LevelPanel.gameBoard);
+    private Gravity gravity = new Gravity(collision);
     private PhysicsStatus physicsStatus = new PhysicsStatus(1, 0, 0, false, getX(), getY());;
     private List<PhysicsProcessor> physicsProcessors = new ArrayList<>();
     private List<PhysicsProcessor> locationProcessors = new ArrayList<>();
@@ -54,9 +59,8 @@ public class Character extends JLabel implements ActionListener {
         this.icons = icons;
         this.keyBind = keyBind;
         setIcon(icons[0]);
-        this.collision = new Collision(LevelPanel.gameBoard);
-        this.physicsProcessors.add(new Gravity(collision));
 
+        defaultPhysics();
         defaultTrigger();
     }
 
@@ -122,17 +126,32 @@ public class Character extends JLabel implements ActionListener {
         return new int[] { getX(), getY() };
     }
 
-    public void addTrigger(PhysicsProcessor trigger) {
-        locationProcessors.add(trigger);
+    private List<PhysicsProcessor> getProcessorQueue(int queue) {
+        return switch (queue) {
+            case 0 -> physicsProcessors;
+            case 1 -> locationProcessors;
+            default -> physicsProcessors;
+        };
     }
-    public void removeTrigger(PhysicsProcessor trigger) {
-        locationProcessors.remove(trigger);
+
+    // Trigger & Physics Management
+    public void addProcessor(PhysicsProcessor processor, int queue) {
+        getProcessorQueue(queue).add(processor);
     }
-    public void clearTrigger() {
-        locationProcessors.clear();
+    public void removeProcessor(PhysicsProcessor processor, int queue) {
+        getProcessorQueue(queue).remove(processor);
+    }
+    public void clearProcessor(int queue) {
+        getProcessorQueue(queue).clear();
+    }
+
+    public void defaultPhysics() {
+        clearProcessor(PHYSICS_QUEUE);
+        // Gravity
+        this.physicsProcessors.add(gravity);
     }
     public void defaultTrigger() {
-        clearTrigger();
+        clearProcessor(TRIGGER_QUEUE);
         // Collect Coin
         TriggerAction collectCoin = (int[] coinPos, PhysicsStatus status) -> {
             LevelPanel.gameBoard[coinPos[0]][coinPos[1]].setIcon(null);
