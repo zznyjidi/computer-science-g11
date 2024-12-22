@@ -9,6 +9,7 @@ public class Settings {
     public final static int COLLISION_OFFSET_THRESHOLD = 4;
     public static String timerDisplayFormat = "%02d:%02d:%02d";
 
+    public final static String GAME_NAME = "Mario Game";
     public final static Color TEXT_COLOR = new Color(0x000000);
 
     public static String[] scoreServerAddr = new String[] {"https", "score.zzny.fun"};
