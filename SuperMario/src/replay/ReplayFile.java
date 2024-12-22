@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -76,6 +79,21 @@ public class ReplayFile {
             ));
         }
         return frames;
+    }
+
+    public static File chooseReplayFile() throws FileNotFoundException {
+        // Use JFileChooser to get a File
+        // https://stackoverflow.com/questions/40255039/how-to-choose-file-in-java
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Replay File (json)", "json");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile();
+        } else {
+            throw new FileNotFoundException();
+        }
     }
 
     public static JSONObject load(File replayJson) throws FileNotFoundException {
