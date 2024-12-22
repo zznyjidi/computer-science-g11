@@ -157,7 +157,7 @@ public class Character extends JLabel implements ActionListener {
         TriggerAction nextLevel = (int[] flagPos, PhysicsStatus status) -> {
             LevelPanel.renderFrameTimer.stop();
             physicsStatus.reset();
-            if (Database.replayRecorder != null) {
+            if (Database.replayRecorder != null && !Database.replayMode) {
                 ReplayFile.exportFileDefault();
             }
             Database.scoreDisplay.reset();
@@ -191,6 +191,9 @@ public class Character extends JLabel implements ActionListener {
         // Trigger Next Level if needed
         // bugfix: java.util.ConcurrentModificationException
         if (this.triggerNextLevel) {
+            if (Database.replayMode) {
+                Database.replayMode = false;
+            }
             Database.levelPanel.nextLevel();
             this.triggerNextLevel = false;
         }

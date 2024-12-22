@@ -36,7 +36,6 @@ public class PanelManager {
     }
 
     public void useLevel(int level) {
-        Database.replayMode = false;
         if (taggedPanels.get("level") == null) {
             if (Database.levelPanel == null)
                 Database.levelPanel = new LevelPanel();

@@ -16,6 +16,7 @@ import javax.swing.Timer;
 
 import global.Database;
 import global.Settings;
+import replay.ReplayPlayer;
 
 public class LevelPanel extends JPanel implements KeyListener {
 
@@ -26,6 +27,8 @@ public class LevelPanel extends JPanel implements KeyListener {
     public static int currentLevel;
 
     public static Timer renderFrameTimer;
+
+    private ReplayPlayer replayPlayer = new ReplayPlayer();
 
     public LevelPanel(int level) {
         setLayout(null);
@@ -65,9 +68,13 @@ public class LevelPanel extends JPanel implements KeyListener {
         loadLevel(level);
         initLevel();
         if (!Database.replayMode) {
+            character.defaultPhysics();
             initKeyBind();
             if (Database.replayRecorder != null)
                 character.addProcessor(Database.replayRecorder, Character.TRIGGER_QUEUE);
+        } else {
+            replayPlayer.loadReplay(Database.loadedReplay);
+            character.addProcessor(replayPlayer, Character.PHYSICS_QUEUE);
         }
 
         revalidate();
