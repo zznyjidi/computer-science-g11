@@ -55,8 +55,8 @@ public class Account {
                 Map.entry("password", password)));
             String responds = HttpRequest.getRespond(connection);
             JSONObject respondJson = new JSONObject(responds);
-            this.uid = (int) respondJson.get("uid");
-            this.nickname = "";
+            this.uid = respondJson.getInt("uid");
+            this.nickname = respondJson.getString("nickname");
             this.authToken = "";
             this.loggedIn = true;
         } catch (MalformedURLException e) {
