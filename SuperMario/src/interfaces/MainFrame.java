@@ -8,7 +8,6 @@ import javax.swing.WindowConstants;
 
 import global.Database;
 import global.Settings;
-import replay.ReplayFile;
 
 public class MainFrame extends JFrame {
     public MainFrame() {
@@ -23,16 +22,13 @@ public class MainFrame extends JFrame {
         Database.panelManager = manager;
         add(manager.getLayeredPane());
 
+        // Show Panel
         try {
-            Database.replayMode = true;
-            Database.loadedReplay = ReplayFile.load_frame(new File("replay/2024-12-22_15-01-25.json"));
+            manager.replayLevel(new File("replay/2024-12-22_15-01-25.json"));
+            manager.useScoreDisplay();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        // Show Panel
-        manager.useLevel(1);
-        manager.useScoreDisplay();
 
         // bugfix: force rerender
         revalidate();

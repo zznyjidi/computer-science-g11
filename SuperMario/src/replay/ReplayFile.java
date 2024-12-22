@@ -63,6 +63,21 @@ public class ReplayFile {
         Database.replayRecorder.reset();
     }
 
+    public static List<PhysicsStatus> extractFrames(JSONArray frameJsonArray) {
+        // Create Frame List
+        List<PhysicsStatus> frames = new ArrayList<>();
+        for (Object frame : frameJsonArray) {
+            JSONObject currentFrame = (JSONObject)frame;
+            frames.add(new PhysicsStatus(
+                currentFrame.getInt("gF"), 
+                currentFrame.getInt("dX"), currentFrame.getInt("dY"), 
+                currentFrame.getBoolean("j"), 
+                currentFrame.getInt("pX"), currentFrame.getInt("pY")
+            ));
+        }
+        return frames;
+    }
+
     public static JSONObject load(File replayJson) throws FileNotFoundException {
         // Read File with String Builder
         StringBuilder fileContent = new StringBuilder();
@@ -75,17 +90,6 @@ public class ReplayFile {
 
     public static List<PhysicsStatus> load_frame(File replayJson) throws FileNotFoundException {
         JSONArray frameArray = load(replayJson).getJSONArray("replay");
-        // Create Frame List
-        List<PhysicsStatus> frames = new ArrayList<>();
-        for (Object frame : frameArray) {
-            JSONObject currentFrame = (JSONObject)frame;
-            frames.add(new PhysicsStatus(
-                currentFrame.getInt("gF"), 
-                currentFrame.getInt("dX"), currentFrame.getInt("dY"), 
-                currentFrame.getBoolean("j"), 
-                currentFrame.getInt("pX"), currentFrame.getInt("pY")
-            ));
-        }
-        return frames;
+        return extractFrames(frameArray);
     }
 }

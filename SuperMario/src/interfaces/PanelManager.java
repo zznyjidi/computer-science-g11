@@ -1,14 +1,19 @@
 package interfaces;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import org.json.JSONObject;
+
 import global.Database;
 import hud.ScoreDisplay;
 import level.LevelPanel;
+import replay.ReplayFile;
 
 public class PanelManager {
     private Map<Integer, JPanel> panels = new HashMap<>();
@@ -44,6 +49,18 @@ public class PanelManager {
         LevelPanel levelPanel = (LevelPanel) taggedPanels.get("level");
         switchPanel(levelPanel, JLayeredPane.DEFAULT_LAYER);
         levelPanel.newLevel(level);
+    }
+
+    public void playLevel(int level) {
+        Database.replayMode = false;
+        useLevel(level);
+    }
+
+    public void replayLevel(File replayFile) throws FileNotFoundException {
+        JSONObject replayJson = ReplayFile.load(replayFile);
+        Database.replayMode = true;
+        Database.loadedReplay = ReplayFile.extractFrames(replayJson.getJSONArray("replay"));
+        useLevel(replayJson.getJSONObject("info").getInt("level_id"));
     }
 
     public void useScoreDisplay() {
