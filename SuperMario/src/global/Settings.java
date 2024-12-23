@@ -1,6 +1,10 @@
 package global;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public class Settings {
@@ -11,6 +15,21 @@ public class Settings {
 
     public final static String GAME_NAME = "Mario Game";
     public final static Color TEXT_COLOR = new Color(0x000000);
+
+    public static Font titleFontTemplate;
+    // Init Statics with Exception Handle
+    // https://howtodoinjava.com/java/exception-handling/checked-exceptions-thrown-in-initializer-blocks-can-be-declared-by-the-constructors/
+    static {
+        try {
+            // Custom Font
+            // https://stackoverflow.com/questions/21081586/using-a-custom-font-for-a-jlabel
+            titleFontTemplate = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/LOT.otf"));
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final static Font TITLE_FONT = titleFontTemplate.deriveFont(Font.BOLD, 82.5f);
 
     public static String[] scoreServerAddr = new String[] {"https", "score.zzny.fun"};
     public static Map<String, String> scoreServerFeature = Map.ofEntries(
