@@ -3,18 +3,23 @@ package interfaces;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import global.Database;
 import global.Settings;
 
 /*
  * Designed in Canvas
  * https://www.canva.com/design/DAGaIPDi0nQ/wZGvsAGywXT_qLxQM_0igQ/view
  */
-public class TitlePanel extends JPanel {
+public class TitlePanel extends JPanel implements ActionListener {
 
     // Labels
     private JLabel titleLabel;
@@ -22,7 +27,7 @@ public class TitlePanel extends JPanel {
 
     // Buttons
     private JPanel buttonPanel;
-    private JButton[] buttons = new JButton[4];
+    private List<JButton> buttons = new ArrayList<>();
 
     public TitlePanel() {
         setLayout(null);
@@ -49,8 +54,8 @@ public class TitlePanel extends JPanel {
         constraints.ipady = 10;
         add(buttonPanel);
 
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = new JButton(switch (i) {
+        for (int i = 0; i < 4; i++) {
+            JButton button = new JButton(switch (i) {
                 case 0 -> "Start";
                 case 1 -> "Select";
                 case 2 -> "Watch";
@@ -58,8 +63,26 @@ public class TitlePanel extends JPanel {
                 default -> "ERROR!";
             });
             constraints.gridy = i;
-            buttons[i].setFont(Settings.BUTTON_FONT);
-            buttonPanel.add(buttons[i], constraints);
+            button.setFont(Settings.BUTTON_FONT);
+            button.addActionListener(this);
+            buttons.add(button);
+            buttonPanel.add(button, constraints);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (buttons.indexOf(e.getSource())) {
+            // Start Button
+            case 0 -> {
+                Database.panelManager.useLevel(1);
+                Database.panelManager.useScoreDisplay();
+                Database.levelTimer.start();
+            }
+            // Exit Button
+            case 3 -> {
+                System.exit(0);
+            }
         }
     }
 }
