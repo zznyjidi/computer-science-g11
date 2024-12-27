@@ -18,7 +18,7 @@ import replay.ReplayFile;
 public class PanelManager {
     private Map<Integer, JPanel> panels = new HashMap<>();
     private Map<String, JPanel> taggedPanels = new HashMap<>();
-    JLayeredPane layeredPane = new JLayeredPane();
+    private JLayeredPane layeredPane = new JLayeredPane();
 
     public void switchPanel(JPanel panel, Integer layer) {
         try {
@@ -28,6 +28,7 @@ public class PanelManager {
         }
         try {
             panels.put(layer, panel);
+            panel.setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
             layeredPane.add(panels.get(layer), layer);
         } catch (NullPointerException e) {
             //e.printStackTrace();
@@ -40,6 +41,16 @@ public class PanelManager {
         return layeredPane;
     }
 
+    // Pages
+    public void useTitle() {
+        if (taggedPanels.get("title") == null) {
+            taggedPanels.put("title", new TitlePanel());
+        }
+        TitlePanel titlePanel = (TitlePanel) taggedPanels.get("title");
+        switchPanel(titlePanel, JLayeredPane.DEFAULT_LAYER);
+    }
+
+    // Levels
     public void useLevel(int level) {
         if (taggedPanels.get("level") == null) {
             if (Database.levelPanel == null)

@@ -17,6 +17,7 @@ public class Settings {
     public final static Color TEXT_COLOR = new Color(0x000000);
 
     public static Font titleFontTemplate;
+    public static Font buttonFontTemplate;
     // Init Statics with Exception Handle
     // https://howtodoinjava.com/java/exception-handling/checked-exceptions-thrown-in-initializer-blocks-can-be-declared-by-the-constructors/
     static {
@@ -24,12 +25,14 @@ public class Settings {
             // Custom Font
             // https://stackoverflow.com/questions/21081586/using-a-custom-font-for-a-jlabel
             titleFontTemplate = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/LOT.otf"));
+            buttonFontTemplate = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/Flynnmono.ttf"));
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
     }
 
     public final static Font TITLE_FONT = titleFontTemplate.deriveFont(Font.BOLD, 82.5f);
+    public final static Font BUTTON_FONT = buttonFontTemplate.deriveFont(Font.BOLD, 16f);
 
     public static String[] scoreServerAddr = new String[] {"https", "score.zzny.fun"};
     public static Map<String, String> scoreServerFeature = Map.ofEntries(

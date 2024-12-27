@@ -1,13 +1,13 @@
 package interfaces;
 
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
-import javax.swing.JFrame;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 
-import global.Database;
 import global.Settings;
 
 /*
@@ -16,8 +16,13 @@ import global.Settings;
  */
 public class TitlePanel extends JPanel {
 
+    // Labels
     private JLabel titleLabel;
     private JLabel titleShadowLabel;
+
+    // Buttons
+    private JPanel buttonPanel;
+    private JButton[] buttons = new JButton[4];
 
     public TitlePanel() {
         setLayout(null);
@@ -34,19 +39,27 @@ public class TitlePanel extends JPanel {
         titleShadowLabel.setForeground(new Color(0x87d398));
         add(titleShadowLabel);
 
-        
-    }
+        buttonPanel = new JPanel();
+        buttonPanel.setBounds(430, 250, 150, 180);
+        buttonPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.ipady = 10;
+        add(buttonPanel);
 
-    public static void main(String[] args) {
-        JFrame mainFrame = new JFrame();
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainFrame.setSize(Database.windowLength, Database.windowWidth);
-        mainFrame.setTitle(Settings.GAME_NAME);
-        mainFrame.setVisible(true);
-
-        mainFrame.add(new TitlePanel());
-
-        mainFrame.revalidate();
-        mainFrame.repaint();
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new JButton(switch (i) {
+                case 0 -> "Start";
+                case 1 -> "Select";
+                case 2 -> "Watch";
+                case 3 -> "Exit";
+                default -> "ERROR!";
+            });
+            constraints.gridy = i;
+            buttons[i].setFont(Settings.BUTTON_FONT);
+            buttonPanel.add(buttons[i], constraints);
+        }
     }
 }
