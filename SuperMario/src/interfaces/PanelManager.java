@@ -69,6 +69,10 @@ public class PanelManager {
 
     public void replayLevel(File replayFile) throws FileNotFoundException {
         JSONObject replayJson = ReplayFile.load(replayFile);
+        replayLevel(replayJson);
+    }
+
+    public void replayLevel(JSONObject replayJson) {
         Database.replayMode = true;
         Database.loadedReplay = ReplayFile.extractFrames(replayJson.getJSONArray("replay"));
         useLevel(replayJson.getJSONObject("info").getInt("level_id"));

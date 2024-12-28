@@ -7,5 +7,9 @@
         "**/*.rpa": true,
         "**/*.rpymc": true,
         "**/cache/": true
-    }
+    },
+    "cSpell.words": [
+        "Flynnmono",
+        "Loooooooong"
+    ]
 }
