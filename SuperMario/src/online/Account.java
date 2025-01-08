@@ -94,6 +94,9 @@ public class Account {
     }
 
     public int submitScore(JSONObject replay) {
+        if (!loggedIn) {
+            return -1;
+        }
         try {
             URL url = new URI(
                 Settings.scoreServerAddr[0],
@@ -102,7 +105,8 @@ public class Account {
                 "uid=" + uid, null).toURL();
             HttpURLConnection connection = HttpRequest.post_json(url, replay);
             JSONObject respond = new JSONObject(HttpRequest.getRespond(connection));
-            return (int) respond.get("replay_uid");
+            replay.getJSONObject("info").put("replay_uid", respond.getInt("replay_uid"));
+            return respond.getInt("replay_uid");
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
             System.err.println("Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);

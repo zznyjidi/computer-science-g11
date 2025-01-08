@@ -52,6 +52,8 @@ public class ReplayFile {
         // Write to Json File
         // https://stackoverflow.com/questions/57913106/append-to-jsonobject-write-object-to-file-using-org-json-for-java
         try {
+            // Submit Score to Server
+            Database.account.submitScore(replay);
             // Create File
             // https://www.baeldung.com/java-how-to-create-a-file
             File replayFile = new File(fileName);
@@ -59,7 +61,6 @@ public class ReplayFile {
             PrintWriter replayFileWriter = new PrintWriter(replayFile, "UTF-8");
             replayFileWriter.println(replay.toString());
             replayFileWriter.close();
-            Database.account.submitScore(replay);
         } catch (IOException e) {
             e.printStackTrace();
         }
