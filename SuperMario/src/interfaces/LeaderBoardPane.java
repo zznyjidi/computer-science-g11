@@ -36,12 +36,23 @@ public class LeaderBoardPane extends JScrollPane implements MouseListener {
     }
 
     public LeaderBoardPane(List<JSONObject> replays) {
-        leaderBoardInfo = replays;
+        this();
+        updateList(replays);
+    }
 
+    public LeaderBoardPane() {
         // JPanel that list the scores
         leaderBoardPanel = new JPanel();
         leaderBoardPanel.setLayout(new BoxLayout(leaderBoardPanel, BoxLayout.PAGE_AXIS));
+        setViewportView(leaderBoardPanel);
+    }
 
+    public void updateList(List<JSONObject> replays) {
+        selectedReplay = -1;
+        leaderBoardPanel.removeAll();
+        leaderBoardEntries.clear();
+
+        leaderBoardInfo = replays;
         // Create Entries form Json
         for (Object scoreObject : leaderBoardInfo) {
             JPanel leaderBoardEntry = LeaderBoardEntry.fromJson((JSONObject) scoreObject);
@@ -56,8 +67,8 @@ public class LeaderBoardPane extends JScrollPane implements MouseListener {
             leaderBoardEntries.add(leaderBoardEntry);
             leaderBoardPanel.add(leaderBoardEntry);
         }
-
-        setViewportView(leaderBoardPanel);
+        leaderBoardPanel.revalidate();
+        leaderBoardPanel.repaint();
     }
 
     public int getSelectedReplay() {

@@ -49,6 +49,13 @@ public class PanelManager {
         TitlePanel titlePanel = (TitlePanel) taggedPanels.get("title");
         switchPanel(titlePanel, JLayeredPane.DEFAULT_LAYER);
     }
+    public void useReplaySelect() {
+        if (taggedPanels.get("replay-select") == null) {
+            taggedPanels.put("replay-select", new ReplaySelectPanel());
+        }
+        ReplaySelectPanel replaySelectPanel = (ReplaySelectPanel) taggedPanels.get("replay-select");
+        switchPanel(replaySelectPanel, JLayeredPane.DEFAULT_LAYER);
+    }
 
     // Levels
     public void useLevel(int level) {
