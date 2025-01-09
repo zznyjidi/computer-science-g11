@@ -12,6 +12,11 @@ import global.Settings;
 import network.HttpRequest;
 
 public class LeaderBoard {
+    /**
+     * Fetch Online Leaderboard
+     * @param level level ID
+     * @return LeaderBoard in JSON Array Format
+     */
     public static JSONArray fetch(int level) {
         // Connect to Server
         JSONArray respondJson = null;

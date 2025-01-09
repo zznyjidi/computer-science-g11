@@ -15,10 +15,13 @@ import global.Settings;
 import network.HttpRequest;
 
 public class Account {
+
+    // Info
     private int uid;
     private String username;
     private String nickname;
 
+    // Login Status
     private String authToken;
     private boolean loggedIn;
 
@@ -26,6 +29,7 @@ public class Account {
         this.username = username;
     }
 
+    // Getters
     public int getUid() {
         return uid;
     }
@@ -42,6 +46,11 @@ public class Account {
         return loggedIn;
     }
 
+    /**
+     * Login to Server
+     * @param password account's password
+     * @return account uid (-1 for Wrong Info, -2 for Error Communicating with the Server)
+     */
     public int login(String password) {
         try {
             // Connect to Server
@@ -86,13 +95,26 @@ public class Account {
         return "Account [uid=" + uid + ", username=" + username + ", loggedIn=" + loggedIn + "]";
     }
 
+    /**
+     * Get Account Info in json format
+     * @return account info 
+     */
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put("uid", this.uid);
-        json.put("nickname", this.nickname);
+        if (!this.nickname.equals("")) {
+            json.put("nickname", this.nickname);
+        } else {
+            json.put("nickname", this.username);
+        }
         return json;
     }
 
+    /**
+     * Submit a replay to server
+     * @param replay replay json file
+     * @return replay uid (-1 for failed submission)
+     */
     public int submitScore(JSONObject replay) {
         if (!loggedIn) {
             return -1;
