@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
         for (int i = 0; i < 3; i++) {
             JButton button = new JButton(switch (i) {
                 case 0 -> "Refresh";
-                case 1 -> "Select";
+                case 1 -> "Browse";
                 case 2 -> "Play";
                 default -> "ERROR!";
             });
@@ -86,20 +87,26 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         switch (buttons.indexOf(event.getSource())) {
+            // Refresh Button
             case 0 -> refreshDir();
+            // Browse Button
             case 1 -> {
                 try {
-                    Database.panelManager.replayLevel(ReplayFile.chooseReplayFile());
+                    JSONObject replayFile = ReplayFile.load(ReplayFile.chooseReplayFile());
+                    leaderBoardPane.selectEntry(leaderBoardPane.newEntry(replayFile));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                Database.panelManager.useScoreDisplay();
-                Database.levelTimer.start();
             }
+            // Play Button
             case 2 -> {
-                Database.panelManager.replayLevel(leaderBoardPane.getSelectedReplayJson());
-                Database.panelManager.useScoreDisplay();
-                Database.levelTimer.start();
+                try {
+                    Database.panelManager.replayLevel(leaderBoardPane.getSelectedReplayJson());
+                    Database.panelManager.useScoreDisplay();
+                    Database.levelTimer.start();
+                } catch (IndexOutOfBoundsException e) {
+                    JOptionPane.showMessageDialog(this, "Replay Not Selected! ", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
             }
         }
     }

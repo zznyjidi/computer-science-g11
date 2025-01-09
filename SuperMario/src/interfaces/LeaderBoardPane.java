@@ -55,20 +55,41 @@ public class LeaderBoardPane extends JScrollPane implements MouseListener {
         leaderBoardInfo = replays;
         // Create Entries form Json
         for (Object scoreObject : leaderBoardInfo) {
-            JPanel leaderBoardEntry = LeaderBoardEntry.fromJson((JSONObject) scoreObject);
-            // Set Max Size for Entries
-            // https://stackoverflow.com/questions/18405660/how-to-set-component-size-inside-container-with-boxlayout
-            leaderBoardEntry.setMaximumSize(new Dimension(500, 68));
-            leaderBoardEntry.setMinimumSize(new Dimension(300, 68));
-            // Clickable Panel
-            // https://stackoverflow.com/questions/9967006/how-to-call-a-function-when-i-click-on-a-jpanel-java
-            leaderBoardEntry.addMouseListener(this);
-            // Add Entry to Panel
-            leaderBoardEntries.add(leaderBoardEntry);
-            leaderBoardPanel.add(leaderBoardEntry);
+            newEntry((JSONObject) scoreObject);
         }
         leaderBoardPanel.revalidate();
         leaderBoardPanel.repaint();
+    }
+
+    public int newEntry(JSONObject ReplayFile) {
+        JPanel leaderBoardEntry = LeaderBoardEntry.fromJson(ReplayFile);
+        // Set Max Size for Entries
+        // https://stackoverflow.com/questions/18405660/how-to-set-component-size-inside-container-with-boxlayout
+        leaderBoardEntry.setMaximumSize(new Dimension(500, 68));
+        leaderBoardEntry.setMinimumSize(new Dimension(300, 68));
+        // Clickable Panel
+        // https://stackoverflow.com/questions/9967006/how-to-call-a-function-when-i-click-on-a-jpanel-java
+        leaderBoardEntry.addMouseListener(this);
+        // Add Entry to Panel
+        leaderBoardEntries.add(leaderBoardEntry);
+        leaderBoardPanel.add(leaderBoardEntry);
+
+        leaderBoardPanel.revalidate();
+        leaderBoardPanel.repaint();
+        return leaderBoardEntries.indexOf(leaderBoardEntry);
+    }
+
+    public void selectEntry(int index) {
+        // Restore old Panel
+        try {
+            // Default Panel Color
+            // https://stackoverflow.com/questions/9991204/get-default-background-color-of-swing-component
+            leaderBoardEntries.get(selectedReplay).setBackground(UIManager.getColor("Panel.background"));
+        } catch (IndexOutOfBoundsException e) {
+        }
+        // Set new Selected Panel
+        selectedReplay = index;
+        leaderBoardEntries.get(index).setBackground(new Color(0x4ce5fc));
     }
 
     public int getSelectedReplay() {
@@ -81,16 +102,7 @@ public class LeaderBoardPane extends JScrollPane implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent event) {
-        // Restore old Panel
-        try {
-            // Default Panel Color
-            // https://stackoverflow.com/questions/9991204/get-default-background-color-of-swing-component
-            leaderBoardEntries.get(selectedReplay).setBackground(UIManager.getColor("Panel.background"));
-        } catch (IndexOutOfBoundsException e) {
-        }
-        // Set new Selected Panel
-        selectedReplay = leaderBoardEntries.indexOf(event.getSource());
-        ((JPanel) event.getSource()).setBackground(new Color(0x4ce5fc));;
+        selectEntry(leaderBoardEntries.indexOf(event.getSource()));
     }
 
     @Override
