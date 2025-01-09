@@ -13,10 +13,17 @@ import java.util.Map;
 import org.json.JSONObject;
 
 public class HttpRequest {
+    // Constants for Post Form Requests
     static final String BOUNDARY = "*****";
     static final String NEWLINE = "\r\n";
     static final String TWO_HYPHENS = "--";
 
+    /**
+     * Get Request
+     * @param requestUrl url for the request
+     * @return HttpURLConnection Object for the Connection
+     * @throws IOException threw from connection
+     */
     public static HttpURLConnection get(URL requestUrl) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         // Set Request Info
@@ -25,6 +32,12 @@ public class HttpRequest {
         return connection;
     }
 
+    /**
+     * Post Request without Data
+     * @param requestUrl url for the request
+     * @return HttpURLConnection Object for the Connection
+     * @throws IOException threw from connection
+     */
     public static HttpURLConnection post(URL requestUrl) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         // Set Request Info
@@ -33,6 +46,13 @@ public class HttpRequest {
         return connection;
     }
 
+    /**
+     * Post Request with JSON Body
+     * @param requestUrl url for the request
+     * @param json JSON request Body
+     * @return HttpURLConnection Object for the Connection
+     * @throws IOException threw from connection
+     */
     public static HttpURLConnection post_json (URL requestUrl, JSONObject json) throws IOException {
         HttpURLConnection connection = post(requestUrl);
         connection.setRequestProperty("Content-Type", "application/json");
@@ -44,6 +64,13 @@ public class HttpRequest {
         return connection;
     }
 
+    /**
+     * Post Request with Form Body
+     * @param requestUrl url for the request
+     * @param bodyValues Request Body for the Form
+     * @return HttpURLConnection Object for the Connection
+     * @throws IOException threw from connection
+     */
     public static HttpURLConnection post_form(URL requestUrl, Map<String, Object> bodyValues) throws IOException {
         HttpURLConnection connection = post(requestUrl);
         connection.setRequestProperty(
@@ -77,6 +104,12 @@ public class HttpRequest {
         return connection;
     }
 
+    /**
+     * Read Respond Body From Opened Connection
+     * @param connection HttpURLConnection Object for the Connection
+     * @return Respond Body as String
+     * @throws IOException threw from connection
+     */
     public static String getRespond(HttpURLConnection connection) throws IOException {
         // Read Respond from connection
         InputStream responseStream;

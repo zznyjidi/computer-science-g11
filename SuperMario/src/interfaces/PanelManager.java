@@ -16,10 +16,16 @@ import level.LevelPanel;
 import replay.ReplayFile;
 
 public class PanelManager {
+    // Components
     private Map<Integer, JPanel> panels = new HashMap<>();
     private Map<String, JPanel> taggedPanels = new HashMap<>();
     private JLayeredPane layeredPane = new JLayeredPane();
 
+    /**
+     * Switch the Panel at specific layer
+     * @param panel new Panel
+     * @param layer target layer
+     */
     public void switchPanel(JPanel panel, Integer layer) {
         try {
             layeredPane.remove(panels.get(layer));

@@ -20,14 +20,17 @@ import replay.ReplayPlayer;
 
 public class LevelPanel extends JPanel implements KeyListener {
 
+    // Components
     public static JLabel[][] gameBoard = new JLabel[20][25];
     public static JPanel levelPanel = new JPanel();
     public static Character character = new Character(Icon.characterIcon, new String[] { "a", "d", " " });
     public static int[] startingPoint;
     public static int currentLevel;
 
+    // Render
     public static Timer renderFrameTimer;
 
+    // Replay
     private ReplayPlayer replayPlayer = new ReplayPlayer();
 
     public LevelPanel(int level) {
@@ -58,6 +61,10 @@ public class LevelPanel extends JPanel implements KeyListener {
         newLevel(currentLevel + 1);
     }
 
+    /**
+     * Create Level From File in levels named Level{x}.txt
+     * @param level x(Level ID)
+     */
     public void newLevel(int level) {
         remove(levelPanel);
         levelPanel.removeKeyListener(this);
@@ -84,6 +91,10 @@ public class LevelPanel extends JPanel implements KeyListener {
             renderFrameTimer.start();
     }
 
+    /**
+     * Load Level From File to gameBoard
+     * @param level Level ID
+     */
     private void loadLevel(int level) {
         Scanner fileInput = null;
         try {
@@ -119,6 +130,9 @@ public class LevelPanel extends JPanel implements KeyListener {
         currentLevel = level;
     }
 
+    /**
+     * Draw Level from gameBoard
+     */
     private void initLevel() {
         levelPanel.setLayout(null);
         levelPanel.setBackground(Color.WHITE);
@@ -145,6 +159,9 @@ public class LevelPanel extends JPanel implements KeyListener {
         add(levelPanel);
     }
 
+    /**
+     * Setup Key Binds from character's KeyBind Array
+     */
     public void initKeyBind() {
         InputMap inputMap = levelPanel.getInputMap();
         ActionMap actionMap = levelPanel.getActionMap();

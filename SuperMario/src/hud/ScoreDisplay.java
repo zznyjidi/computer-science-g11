@@ -13,22 +13,27 @@ import global.Settings;
 @SuppressWarnings("FieldMayBeFinal")
 public class ScoreDisplay extends JPanel implements ActionListener {
 
+    // Components
     private JLabel scoreLabel;
     private JLabel timerLabel;
 
+    // Info
     private int[] timerTime = new int[] { 0, 0, 0 };
     private int score = 0;
 
     public ScoreDisplay() {
+        // Prepare Panel
         setOpaque(false);
         setLayout(null);
         setBounds(0, 0, Database.windowLength, Database.windowWidth);
 
+        // Score Label
         scoreLabel = new JLabel(String.format("%03d", score));
         scoreLabel.setBounds(30, 30, 30, 10);
         scoreLabel.setForeground(Settings.TEXT_COLOR);
         this.add(scoreLabel);
 
+        // Timer Label
         timerLabel = new JLabel("000");
         timerLabel.setBounds(30, 40, 100, 10);
         timerLabel.setForeground(Settings.TEXT_COLOR);
@@ -36,6 +41,7 @@ public class ScoreDisplay extends JPanel implements ActionListener {
 
         Database.levelTimer = new Timer(10, this);
 
+        // bugfix: force rerender
         revalidate();
         repaint();
     }

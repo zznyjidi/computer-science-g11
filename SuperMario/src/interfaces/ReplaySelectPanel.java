@@ -23,6 +23,7 @@ import replay.ReplayFile;
 
 public class ReplaySelectPanel extends JPanel implements ActionListener {
 
+    // Components
     List<JSONObject> replayJsonList;
     LeaderBoardPane leaderBoardPane;
 
@@ -64,6 +65,9 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
         refreshDir();
     }
 
+    /**
+     * Reload the List from the replay Directory
+     */
     public void refreshDir() {
         // List File in Dir
         // https://www.baeldung.com/java-list-directory-files

@@ -17,10 +17,17 @@ import org.json.JSONObject;
 import global.Settings;
 
 public class LeaderBoardEntry extends JPanel {
+
+    // Components
     JLabel nicknameLabel;
     JLabel timeLabel;
     JLabel scoreLabel;
 
+    /**
+     * Create LeaderBoardEntry from JSONObject
+     * @param replayFile JSONObject of the replay file for the entry
+     * @return LeaderBoardEntry
+     */
     public static LeaderBoardEntry fromJson(JSONObject replayFile) {
         JSONObject infoSection = replayFile.getJSONObject("info");
         JSONObject playerSection = replayFile.getJSONObject("player");
@@ -47,6 +54,7 @@ public class LeaderBoardEntry extends JPanel {
     }
 
     public LeaderBoardEntry(String nickname, String timeString, int score) {
+        // Prepare Panel & Layout
         super();
         setOpaque(false);
         setLayout(new GridBagLayout());
@@ -83,6 +91,7 @@ public class LeaderBoardEntry extends JPanel {
         repaint();
     }
 
+    // Default Testing Entry
     public LeaderBoardEntry() {
         this("LoooooooongNickname", "12:34:567", 3);
     }

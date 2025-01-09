@@ -18,13 +18,19 @@ import online.LeaderBoard;
 
 public class LeaderBoardPane extends JScrollPane implements MouseListener {
 
+    // Components
     private JPanel leaderBoardPanel;
     private List<JPanel> leaderBoardEntries = new ArrayList<>();
 
+    // Replay List
     private List<JSONObject> leaderBoardInfo;
-
     private int selectedReplay = -1;
 
+    /**
+     * Fetch Leader Board From Server
+     * @param level level id
+     * @return JScrollPane for LeaderBoard
+     */
     public static LeaderBoardPane fromLevel(int level) {
         // Fetch LeaderBoardInfo
         List<JSONObject> leaderBoardInfo = new ArrayList<>();
@@ -41,12 +47,15 @@ public class LeaderBoardPane extends JScrollPane implements MouseListener {
     }
 
     public LeaderBoardPane() {
-        // JPanel that list the scores
         leaderBoardPanel = new JPanel();
         leaderBoardPanel.setLayout(new BoxLayout(leaderBoardPanel, BoxLayout.PAGE_AXIS));
         setViewportView(leaderBoardPanel);
     }
 
+    /**
+     * Recreate List with new replay List
+     * @param replays List of JSONObject of Replay Files
+     */
     public void updateList(List<JSONObject> replays) {
         selectedReplay = -1;
         leaderBoardPanel.removeAll();
@@ -61,6 +70,11 @@ public class LeaderBoardPane extends JScrollPane implements MouseListener {
         leaderBoardPanel.repaint();
     }
 
+    /**
+     * Add New LeaderBoard Entry at the End
+     * @param ReplayFile JSONObject of Replay File
+     * @return Index of the Entry in the List
+     */
     public int newEntry(JSONObject ReplayFile) {
         JPanel leaderBoardEntry = LeaderBoardEntry.fromJson(ReplayFile);
         // Set Max Size for Entries
@@ -79,6 +93,10 @@ public class LeaderBoardPane extends JScrollPane implements MouseListener {
         return leaderBoardEntries.indexOf(leaderBoardEntry);
     }
 
+    /**
+     * Select a Entry in the Pane
+     * @param index index of the Entry to Select
+     */
     public void selectEntry(int index) {
         // Restore old Panel
         try {

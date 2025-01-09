@@ -32,18 +32,21 @@ public class TitlePanel extends JPanel implements ActionListener {
     public TitlePanel() {
         setLayout(null);
 
+        // Title Text
         titleLabel = new JLabel("MARIO");
         titleLabel.setFont(Settings.TITLE_FONT);
         titleLabel.setForeground(new Color(0x354eab));
         titleLabel.setBounds(55, 50, 300, 100);
         add(titleLabel);
 
+        // Title Text Shadow
         titleShadowLabel = new JLabel("MARIO");
         titleShadowLabel.setFont(Settings.TITLE_FONT);
         titleShadowLabel.setBounds(55, 60, 300, 100);
         titleShadowLabel.setForeground(new Color(0x87d398));
         add(titleShadowLabel);
 
+        // Buttons
         buttonPanel = new JPanel();
         buttonPanel.setBounds(430, 250, 150, 180);
         buttonPanel.setLayout(new GridBagLayout());

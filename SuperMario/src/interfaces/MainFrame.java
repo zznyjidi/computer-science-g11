@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
         revalidate();
         repaint();
 
+        // Title Panel
         manager.useTitle();
     }
 }
