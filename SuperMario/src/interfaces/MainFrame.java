@@ -21,10 +21,10 @@ public class MainFrame extends JFrame {
         Database.panelManager = manager;
         add(manager.getLayeredPane());
 
-        manager.useTitle();
-
         // bugfix: force rerender
         revalidate();
         repaint();
+
+        manager.useTitle();
     }
 }

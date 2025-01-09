@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.Timer;
 
 import hud.ScoreDisplay;
+import interfaces.MainFrame;
 import interfaces.PanelManager;
 import level.LevelPanel;
 import online.Account;
@@ -13,6 +14,7 @@ import replay.ReplayRecorder;
 
 public class Database {
     public static Timer levelTimer;
+    public static MainFrame mainFrame;
     public static PanelManager panelManager;
     public static ScoreDisplay scoreDisplay;
     public static LevelPanel levelPanel;

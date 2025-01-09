@@ -12,6 +12,6 @@ public class Application {
         Database.account.login("uU55c1Y340XpLgJJHp74");
         Database.replayRecorder = new ReplayRecorder();
 
-        new MainFrame();
+        Database.mainFrame = new MainFrame();
     }
 }
