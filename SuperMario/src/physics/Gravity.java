@@ -2,8 +2,13 @@ package physics;
 
 public class Gravity implements PhysicsProcessor {
 
+    // Components
     Collision collision;
 
+    /**
+     * Collisions and Jumping&Falling for Character
+     * @param collision collision processor
+     */
     public Gravity(Collision collision) {
         this.collision = collision;
     }

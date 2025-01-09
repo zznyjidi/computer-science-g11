@@ -9,12 +9,23 @@ import sound.SoundPlayer;
 
 public class Collision implements PhysicsProcessor {
 
+    // Components
     JLabel[][] gameBoard;
 
+    /**
+     * Collision with block on game board
+     * @param gameBoard game board from level panel
+     */
     public Collision(JLabel[][] gameBoard) {
         this.gameBoard = gameBoard;
     }
 
+    /**
+     * Get Collision on X-Axis
+     * @param position current position
+     * @param deltaX movement in current frame on x
+     * @return will trigger collision
+     */
     public boolean getCollisionX(int[] position, int deltaX) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;
@@ -49,6 +60,12 @@ public class Collision implements PhysicsProcessor {
         return false;
     }
 
+    /**
+     * Get Collision on Y-Axis
+     * @param position current position
+     * @param deltaY movement in current frame on y
+     * @return will trigger collision
+     */
     public boolean getCollisionY(int[] position, int deltaY) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;

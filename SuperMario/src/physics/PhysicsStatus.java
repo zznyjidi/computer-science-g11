@@ -1,14 +1,26 @@
 package physics;
 
 public class PhysicsStatus {
+
+    // Relative Moving Info
     private int gravityFactor;
     private int deltaX; 
     private int deltaY;
     private boolean jumping;
 
+    // Absolute Position
     private int locationX;
     private int locationY;
-    
+
+    /**
+     * Data Class for Physics Status
+     * @param gravityFactor amount of movement per frame
+     * @param deltaX movement for the frame on x
+     * @param deltaY movement for the frame on y
+     * @param jumping is jumping
+     * @param locationX current absolute x position
+     * @param locationY current absolute y position
+     */
     public PhysicsStatus(int gravityFactor, int deltaX, int deltaY, boolean jumping, int locationX, int locationY) {
         this.gravityFactor = gravityFactor;
         this.deltaX = deltaX;
@@ -18,6 +30,7 @@ public class PhysicsStatus {
         this.locationY = locationY;
     }
 
+    // Getters & Setters for relative info
     public int getGravityFactor() {
         return gravityFactor;
     }
@@ -39,7 +52,6 @@ public class PhysicsStatus {
         this.deltaY = deltaY;
     }
 
-
     public boolean isJumping() {
         return jumping;
     }
@@ -47,6 +59,7 @@ public class PhysicsStatus {
         this.jumping = jumping;
     }
 
+    // Getters for absolute position
     public int getLocationX() {
         return locationX;
     }
@@ -63,10 +76,23 @@ public class PhysicsStatus {
                 + ", locationX=" + locationX + ", locationY=" + locationY + "]";
     }
 
+    /**
+     * Create a Copy of the Status
+     * @return copied version of status
+     */
     public PhysicsStatus copy() {
         return new PhysicsStatus(gravityFactor, deltaX, deltaY, jumping, locationX, locationY);
     }
 
+    /**
+     * Update Info in the Status
+     * @param gravityFactor amount of movement per frame
+     * @param deltaX movement for the frame on x
+     * @param deltaY movement for the frame on y
+     * @param jumping is jumping
+     * @param locationX current absolute x position
+     * @param locationY current absolute y position
+     */
     public void update(int gravityFactor, int deltaX, int deltaY, boolean jumping, int locationX, int locationY) {
         this.gravityFactor = gravityFactor;
         this.deltaX = deltaX;
@@ -76,11 +102,19 @@ public class PhysicsStatus {
         this.locationY = locationY;
     }
 
+    /**
+     * Update Absolute Position in the Status
+     * @param locationX current absolute x position
+     * @param locationY current absolute y position
+     */
     public void update(int locationX, int locationY) {
         this.locationX = locationX;
         this.locationY = locationY;
     }
 
+    /**
+     * Reset Physics Status
+     */
     public void reset() {
         this.gravityFactor = 1;
         this.deltaX = 0;

@@ -9,17 +9,31 @@ import global.Settings;
 
 public class BlockTrigger implements PhysicsProcessor {
 
+    // Components
     JLabel[][] gameBoard;
     ImageIcon targetBlock;
 
+    // Action for Trigger
     TriggerAction action;
 
+    /**
+     * Trigger Function When touching Block
+     * @param gameBoard game board from level panel
+     * @param targetBlock target block for trigger the function
+     * @param action function to run when block is touched
+     */
     public BlockTrigger(JLabel[][] gameBoard, ImageIcon targetBlock, TriggerAction action) {
         this.gameBoard = gameBoard;
         this.targetBlock = targetBlock;
         this.action = action;
     }
 
+    /**
+     * Get Block Position when touching
+     * @param position current position
+     * @param block target block
+     * @return position of touched target block ((-1, -1)when not touching)
+     */
     public int[] getTouchedBlockPos(int[] position, ImageIcon block) {
         int indexPosRow = position[1] / Settings.BLOCK_SIZE;
         int indexPosCol = position[0] / Settings.BLOCK_SIZE;
@@ -28,7 +42,7 @@ public class BlockTrigger implements PhysicsProcessor {
         boolean inMiddleRow = indexColOffset != 0;
         boolean inMiddleCol = indexRowOffset != 0;
 
-        // At Coin Block
+        // At Target Block
         if (gameBoard[indexPosRow][indexPosCol].getIcon() == block)
             return new int[] { indexPosRow, indexPosCol };
         // Reaching from Top
@@ -86,6 +100,4 @@ public class BlockTrigger implements PhysicsProcessor {
             return false;
         return true;
     }
-
-    
 }
