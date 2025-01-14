@@ -102,7 +102,7 @@ public class Account {
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put("uid", this.uid);
-        if (!this.nickname.equals("")) {
+        if (nickname != null && !this.nickname.equals("")) {
             json.put("nickname", this.nickname);
         } else {
             json.put("nickname", this.username);
