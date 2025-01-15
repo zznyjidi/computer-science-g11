@@ -153,6 +153,12 @@ public class Character extends JLabel implements ActionListener {
         };
         this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.COIN, collectCoin));
 
+        // Gravity Flip
+        TriggerAction reverseGravity = (int[] cloudPos, PhysicsStatus status) -> {
+            status.setGravityFactor(-status.getGravityFactor());
+        };
+        this.locationProcessors.add(new BlockTrigger(LevelPanel.gameBoard, Icon.FLIP, reverseGravity));
+
         // Target Flag
         TriggerAction nextLevel = (int[] flagPos, PhysicsStatus status) -> {
             LevelPanel.renderFrameTimer.stop();

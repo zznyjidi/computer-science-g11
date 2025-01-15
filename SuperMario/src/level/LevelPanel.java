@@ -112,6 +112,7 @@ public class LevelPanel extends JPanel implements KeyListener {
                             case 'B' -> new JLabel(Icon.WALL);
                             case 'C' -> new JLabel(Icon.COIN);
                             case 'F' -> new JLabel(Icon.FLAG);
+                            case 'U' -> new JLabel(Icon.FLIP);
                             case 'S' -> {
                                 startingPoint = new int[] {row, col}; 
                                 yield new JLabel();
