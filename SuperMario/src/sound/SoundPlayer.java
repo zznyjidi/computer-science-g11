@@ -12,6 +12,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundPlayer {
 
+    /**
+     * Play Sound from File
+     * @param sound Sound File
+     */
     public static void play(File sound) {
         try {
             AudioInputStream stream = AudioSystem.getAudioInputStream(sound);

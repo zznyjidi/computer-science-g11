@@ -10,6 +10,7 @@ import physics.PhysicsStatus;
 
 public class ReplayRecorder implements physics.PhysicsProcessor {
 
+    // Use Linked List to avoid frequent memory reallocate
     List<PhysicsStatus> frames = new LinkedList<>();
 
     @Override
@@ -18,6 +19,10 @@ public class ReplayRecorder implements physics.PhysicsProcessor {
         return currentStatus;
     }
 
+    /**
+     * Export to JSON Array for "replay" section for the replay file
+     * @return json array
+     */
     public JSONArray toJSON() {
         JSONArray json = new JSONArray();
         for (PhysicsStatus physicsStatus : frames) {
@@ -33,6 +38,9 @@ public class ReplayRecorder implements physics.PhysicsProcessor {
         return json;
     }
 
+    /**
+     * Clear all recorded frames
+     */
     public void reset() {
         frames.clear();
     }

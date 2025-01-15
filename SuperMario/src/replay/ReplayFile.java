@@ -22,6 +22,16 @@ import online.Account;
 import physics.PhysicsStatus;
 
 public class ReplayFile {
+
+    /**
+     * Export Replay JSON File
+     * @param levelID Level ID
+     * @param score Score in the Level
+     * @param time time spend (in 10ms)
+     * @param player player's account object
+     * @param recorder recorder that holds the list of frame
+     * @return replay file JSON Object
+     */
     public static JSONObject export(int levelID, int score, int time, Account player, ReplayRecorder recorder) {
         JSONObject json = new JSONObject();
 
@@ -41,6 +51,13 @@ public class ReplayFile {
         return json;
     }
 
+    /**
+     * Export to JSON File with default parameters and reset recorder
+     * - Level & Score Info from current Level
+     * - Account Object from Database
+     * - To replay folder
+     * - Current time as file name
+     */
     public static void exportFileDefault() {
         JSONObject replay = ReplayFile.export(
             LevelPanel.currentLevel, Database.scoreDisplay.getScore(), Database.scoreDisplay.getTime(), 
@@ -67,6 +84,11 @@ public class ReplayFile {
         Database.replayRecorder.reset();
     }
 
+    /**
+     * Turn a Replay's Frame List to List of PhysicsStatus
+     * @param frameJsonArray replay's 'replay' section
+     * @return list of physics status from the replay file
+     */
     public static List<PhysicsStatus> extractFrames(JSONArray frameJsonArray) {
         // Create Frame List
         List<PhysicsStatus> frames = new ArrayList<>();
@@ -82,6 +104,11 @@ public class ReplayFile {
         return frames;
     }
 
+    /**
+     * Prompt User to choose a file
+     * @return File that the user choose
+     * @throws FileNotFoundException raised when return value from JFileChooser is not approved
+     */
     public static File chooseReplayFile() throws FileNotFoundException {
         // Use JFileChooser to get a File
         // https://stackoverflow.com/questions/40255039/how-to-choose-file-in-java
@@ -97,6 +124,12 @@ public class ReplayFile {
         }
     }
 
+    /**
+     * Load file to JSON Object
+     * @param replayJson replay file
+     * @return json object
+     * @throws FileNotFoundException raised when the file is not found
+     */
     public static JSONObject load(File replayJson) throws FileNotFoundException {
         // Read File with String Builder
         StringBuilder fileContent = new StringBuilder();
@@ -107,6 +140,12 @@ public class ReplayFile {
         return new JSONObject(fileContent.toString());
     }
 
+    /**
+     * Load frames from json file
+     * @param replayJson replay file
+     * @return json object
+     * @throws FileNotFoundException raised when the file is not found
+     */
     public static List<PhysicsStatus> load_frame(File replayJson) throws FileNotFoundException {
         JSONArray frameArray = load(replayJson).getJSONArray("replay");
         return extractFrames(frameArray);
