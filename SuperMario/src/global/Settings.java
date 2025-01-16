@@ -14,6 +14,9 @@ public class Settings {
     public final static int COLLISION_OFFSET_THRESHOLD = 4;
     public static String timerDisplayFormat = "%02d:%02d:%02d";
 
+    // Level Settings
+    public final static int LEVEL_COUNT = 2;
+
     // Style Settings
     public final static String GAME_NAME = "Mario Game";
     public final static Color TEXT_COLOR = new Color(0x000000);

@@ -19,13 +19,14 @@ import org.json.JSONObject;
 
 import global.Database;
 import global.Settings;
+import interfaces.list.LeaderBoardEntry;
+import interfaces.list.ListPane;
 import replay.ReplayFile;
 
 public class ReplaySelectPanel extends JPanel implements ActionListener {
 
     // Components
-    List<JSONObject> replayJsonList;
-    LeaderBoardPane leaderBoardPane;
+    ListPane<LeaderBoardEntry> leaderBoardPane;
 
     // Buttons
     private JPanel buttonPanel;
@@ -34,7 +35,7 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
     public ReplaySelectPanel() {
         setLayout(null);
 
-        leaderBoardPane = new LeaderBoardPane();
+        leaderBoardPane = new ListPane<>();
         leaderBoardPane.setBounds(0, 0, 400, 500);
         add(leaderBoardPane);
 
@@ -74,18 +75,20 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
         File[] replayFiles = new File("replay").listFiles();
 
         // Read Replay Files
-        replayJsonList = Stream.of(replayFiles)
+        List<LeaderBoardEntry> replayEntryComponents = Stream.of(replayFiles)
                 .filter(file -> !file.isDirectory())
                 .filter(file -> file.getName().endsWith(".json"))
                 .map(file -> {
                     try {
                         return ReplayFile.load(file);
                     } catch (FileNotFoundException e) {
+                        e.printStackTrace();
                         return new JSONObject();
                     }
                 })
+                .map(replayJSON -> LeaderBoardEntry.fromJson(replayJSON))
                 .collect(Collectors.toList());
-        leaderBoardPane.updateList(replayJsonList);
+        leaderBoardPane.updateList(replayEntryComponents);
     }
 
     @Override
@@ -97,7 +100,7 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
             case 1 -> {
                 try {
                     JSONObject replayFile = ReplayFile.load(ReplayFile.chooseReplayFile());
-                    leaderBoardPane.selectEntry(leaderBoardPane.newEntry(replayFile));
+                    leaderBoardPane.selectEntry(leaderBoardPane.newEntry(LeaderBoardEntry.fromJson(replayFile)));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -105,7 +108,9 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
             // Play Button
             case 2 -> {
                 try {
-                    Database.panelManager.replayLevel(leaderBoardPane.getSelectedReplayJson());
+                    Database.panelManager.replayLevel(
+                        leaderBoardPane.getSelectedEntryObject().getReplayJSON()
+                    );
                     Database.panelManager.useScoreDisplay();
                     Database.levelTimer.start();
                 } catch (IndexOutOfBoundsException e) {

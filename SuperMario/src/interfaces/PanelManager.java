@@ -43,6 +43,14 @@ public class PanelManager {
         layeredPane.repaint();
     }
 
+    public void removePanel(Integer layer) {
+        try {
+            layeredPane.remove(panels.get(layer));
+        } catch (NullPointerException e) {
+            //e.printStackTrace();
+        }
+    }
+
     public JLayeredPane getLayeredPane() {
         return layeredPane;
     }

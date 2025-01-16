@@ -1,4 +1,4 @@
-package interfaces;
+package interfaces.list;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -23,6 +23,9 @@ public class LeaderBoardEntry extends JPanel {
     JLabel timeLabel;
     JLabel scoreLabel;
 
+    // Replay Source
+    JSONObject replayFile;
+
     /**
      * Create LeaderBoardEntry from JSONObject
      * @param replayFile JSONObject of the replay file for the entry
@@ -39,9 +42,9 @@ public class LeaderBoardEntry extends JPanel {
         // Set Time
         int time = infoSection.getInt("time");
         int[] timeParts = new int[] {
-            time / 6000,
-            (time % 6000) / 60,
-            (time % 6000) % 60
+            time / 1000,
+            (time % 1000) / 60,
+            (time % 1000) % 60
         };
         String timeString = String.format(
             Settings.timerDisplayFormat, 
@@ -50,7 +53,9 @@ public class LeaderBoardEntry extends JPanel {
         // Set Score
         int score = infoSection.getInt("score");
 
-        return new LeaderBoardEntry(nickname, timeString, score);
+        LeaderBoardEntry entry = new LeaderBoardEntry(nickname, timeString, score);
+        entry.replayFile = replayFile;
+        return entry;
     }
 
     public LeaderBoardEntry(String nickname, String timeString, int score) {
@@ -112,5 +117,9 @@ public class LeaderBoardEntry extends JPanel {
         // Paint Boarder
         graphics.setColor(getForeground());
         graphics.drawRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height);
+    }
+
+    public JSONObject getReplayJSON() {
+        return replayFile;
     }
 }

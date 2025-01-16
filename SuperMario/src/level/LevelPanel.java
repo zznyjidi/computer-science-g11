@@ -10,6 +10,7 @@ import java.util.Scanner;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
@@ -58,7 +59,12 @@ public class LevelPanel extends JPanel implements KeyListener {
     }
 
     public void nextLevel() {
-        newLevel(currentLevel + 1);
+        if (currentLevel < Settings.LEVEL_COUNT)
+            newLevel(currentLevel + 1);
+        else {
+            Database.panelManager.removePanel(JLayeredPane.PALETTE_LAYER);
+            Database.panelManager.useTitle();
+        }
     }
 
     /**

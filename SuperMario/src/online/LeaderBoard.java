@@ -5,10 +5,15 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import global.Settings;
+import interfaces.list.LeaderBoardEntry;
+import interfaces.list.ListPane;
 import network.HttpRequest;
 
 public class LeaderBoard {
@@ -33,5 +38,25 @@ public class LeaderBoard {
             e.printStackTrace();
         }
         return respondJson;
+    }
+
+    /**
+     * Fetch Leader Board From Server
+     * @param level level id
+     * @return JScrollPane for LeaderBoard
+     */
+    public static ListPane<LeaderBoardEntry> fromLevel(int level) {
+        // Fetch LeaderBoardInfo
+        List<JSONObject> leaderBoardInfo = new ArrayList<>();
+        for (Object replayObject : LeaderBoard.fetch(level)) {
+            leaderBoardInfo.add((JSONObject) replayObject);
+        }
+
+        // Convert Replay File to LeaderBoardEntries
+        List<LeaderBoardEntry> entries = leaderBoardInfo.stream()
+            .map((JSONObject replay) -> LeaderBoardEntry.fromJson(replay))
+            .toList();
+
+        return new ListPane<LeaderBoardEntry>(entries);
     }
 }
