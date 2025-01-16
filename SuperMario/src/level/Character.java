@@ -197,6 +197,7 @@ public class Character extends JLabel implements ActionListener {
         // Trigger Next Level if needed
         // bugfix: java.util.ConcurrentModificationException
         if (this.triggerNextLevel) {
+            LevelPanel.renderFrameTimer.stop();
             if (Database.replayMode) {
                 Database.replayMode = false;
             }
