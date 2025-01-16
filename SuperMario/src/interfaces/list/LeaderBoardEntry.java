@@ -42,9 +42,9 @@ public class LeaderBoardEntry extends JPanel {
         // Set Time
         int time = infoSection.getInt("time");
         int[] timeParts = new int[] {
-            time / 1000,
-            (time % 1000) / 60,
-            (time % 1000) % 60
+            time / 6000,
+            (time % 6000) / 100,
+            (time % 100) % 100
         };
         String timeString = String.format(
             Settings.timerDisplayFormat, 

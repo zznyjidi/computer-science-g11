@@ -21,6 +21,7 @@ import global.Database;
 import global.Settings;
 import interfaces.list.LeaderBoardEntry;
 import interfaces.list.ListPane;
+import interfaces.list.ReplayEntry;
 import replay.ReplayFile;
 
 public class ReplaySelectPanel extends JPanel implements ActionListener {
@@ -86,7 +87,7 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
                         return new JSONObject();
                     }
                 })
-                .map(replayJSON -> LeaderBoardEntry.fromJson(replayJSON))
+                .map(replayJSON -> ReplayEntry.fromJson(replayJSON))
                 .collect(Collectors.toList());
         leaderBoardPane.updateList(replayEntryComponents);
     }
@@ -100,7 +101,7 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
             case 1 -> {
                 try {
                     JSONObject replayFile = ReplayFile.load(ReplayFile.chooseReplayFile());
-                    leaderBoardPane.selectEntry(leaderBoardPane.newEntry(LeaderBoardEntry.fromJson(replayFile)));
+                    leaderBoardPane.selectEntry(leaderBoardPane.newEntry(ReplayEntry.fromJson(replayFile)));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
