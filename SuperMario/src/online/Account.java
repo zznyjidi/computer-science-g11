@@ -1,7 +1,6 @@
 package online;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -9,7 +8,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import global.Settings;
@@ -53,6 +51,7 @@ public class Account {
      * @return account uid (-1 for Wrong Info, -2 for Error Communicating with the Server)
      */
     public int login(String password) {
+        HttpURLConnection connection;
         try {
             // Connect to Server
             URL url = new URI(
@@ -60,33 +59,38 @@ public class Account {
                 Settings.scoreServerAddr[1],
                 Settings.scoreServerFeature.get("user-login"),
                 null, null).toURL();
-            HttpURLConnection connection = HttpRequest.post_form(url, Map.ofEntries(
+            connection = HttpRequest.post_form(url, Map.ofEntries(
                 Map.entry("username", username),
                 Map.entry("password", password)));
+        } catch (MalformedURLException | URISyntaxException e) {
+            // Protocol Not Supported / Invalid URL
+            e.printStackTrace();
+            System.err.println("Wrong Server Config! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
+            return -2;
+        } catch (IOException e) {
+            // Network Error
+            e.printStackTrace();
+            System.err.println("Failed to Connect to Server! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
+            return -2;
+        }
+        try {
+            String responds = HttpRequest.getRespond(connection);
+            JSONObject respondJson = new JSONObject(responds);
             if (connection.getResponseCode() == 200) {
-                String responds = HttpRequest.getRespond(connection);
-                JSONObject respondJson = new JSONObject(responds);
                 this.uid = respondJson.getInt("uid");
                 this.nickname = respondJson.getString("nickname");
                 this.authToken = "";
                 this.loggedIn = true;
             } else {
                 // Server Error / Wrong Info
+                System.err.println("Failed to Login: " + respondJson.getString("message"));
                 return -1;
             }
-        } catch (MalformedURLException | URISyntaxException e) {
-            // Protocol Not Supported / Invalid URL
-            e.printStackTrace();
-            System.err.println("Wrong Server Config! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
-            return -2;
-        } catch (ConnectException e) {
+        } catch (IOException e) {
             // Network Error
             e.printStackTrace();
             System.err.println("Failed to Connect to Server! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
             return -2;
-        } catch (IOException | JSONException e) {
-            // Wrong Info
-            return -1;
         }
         return uid;
     }
