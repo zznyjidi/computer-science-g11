@@ -59,6 +59,7 @@ public class ReplayFile {
      * - Current time as file name
      */
     public static void exportFileDefault() {
+        Database.scoreDisplay.stopTimer();
         JSONObject replay = ReplayFile.export(
             LevelPanel.currentLevel, Database.scoreDisplay.getScore(), Database.scoreDisplay.getTime(), 
             Database.account, Database.replayRecorder
