@@ -82,6 +82,10 @@ public class TitlePanel extends JPanel implements ActionListener {
                 Database.panelManager.useScoreDisplay();
                 Database.levelTimer.start();
             }
+            // Select Button
+            case 1 -> {
+                Database.panelManager.useLevelSelect();
+            }
             // Watch Button
             case 2 -> {
                 Database.panelManager.useReplaySelect();

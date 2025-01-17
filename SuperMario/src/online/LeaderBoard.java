@@ -47,16 +47,21 @@ public class LeaderBoard {
      */
     public static ListPane<LeaderBoardEntry> fromLevel(int level) {
         // Fetch LeaderBoardInfo
-        List<JSONObject> leaderBoardInfo = new ArrayList<>();
-        for (Object replayObject : LeaderBoard.fetch(level)) {
-            leaderBoardInfo.add((JSONObject) replayObject);
+        try {
+            List<JSONObject> leaderBoardInfo = new ArrayList<>();
+            for (Object replayObject : LeaderBoard.fetch(level)) {
+                leaderBoardInfo.add((JSONObject) replayObject);
+            }
+
+            // Convert Replay File to LeaderBoardEntries
+            List<LeaderBoardEntry> entries = leaderBoardInfo.stream()
+                .map((JSONObject replay) -> LeaderBoardEntry.fromJson(replay))
+                .toList();
+            return new ListPane<LeaderBoardEntry>(entries);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            System.err.println("Failed to Fetch LeaderBoard! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
         }
-
-        // Convert Replay File to LeaderBoardEntries
-        List<LeaderBoardEntry> entries = leaderBoardInfo.stream()
-            .map((JSONObject replay) -> LeaderBoardEntry.fromJson(replay))
-            .toList();
-
-        return new ListPane<LeaderBoardEntry>(entries);
+        return new ListPane<>();
     }
 }

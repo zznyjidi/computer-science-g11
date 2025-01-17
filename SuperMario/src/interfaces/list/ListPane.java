@@ -22,8 +22,21 @@ public class ListPane<EntryType extends JPanel> extends JScrollPane implements M
     private List<EntryType> listEntries = new ArrayList<>();
     private int selectedEntry = -1;
 
+    private List<ListActionListener> actionListeners = new ArrayList<>();
+
+    // Dimensions
+    private Dimension maxDimension = new Dimension(500, 68);
+    private Dimension minDimension = new Dimension(300, 68);
+
     public ListPane(List<EntryType> entries) {
         this();
+        updateList(entries);
+    }
+
+    public ListPane(List<EntryType> entries, Dimension maxDimension, Dimension minDimension) {
+        this();
+        this.maxDimension = maxDimension;
+        this.minDimension = minDimension;
         updateList(entries);
     }
 
@@ -31,6 +44,22 @@ public class ListPane<EntryType extends JPanel> extends JScrollPane implements M
         listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.PAGE_AXIS));
         setViewportView(listPanel);
+    }
+
+    public void setComponentMaxDimension(Dimension maxDimension) {
+        this.maxDimension = maxDimension;
+    }
+
+    public void setComponentMinDimension(Dimension minDimension) {
+        this.minDimension = minDimension;
+    }
+
+    public void addActionListener(ListActionListener actionListener) {
+        this.actionListeners.add(actionListener);
+    }
+
+    public void removeActionListener(ListActionListener actionListener) {
+        this.actionListeners.remove(actionListener);
     }
 
     /**
@@ -58,8 +87,8 @@ public class ListPane<EntryType extends JPanel> extends JScrollPane implements M
     public int newEntry(EntryType entry) {
         // Set Max Size for Entries
         // https://stackoverflow.com/questions/18405660/how-to-set-component-size-inside-container-with-boxlayout
-        entry.setMaximumSize(new Dimension(500, 68));
-        entry.setMinimumSize(new Dimension(300, 68));
+        entry.setMaximumSize(maxDimension);
+        entry.setMinimumSize(minDimension);
         // Clickable Panel
         // https://stackoverflow.com/questions/9967006/how-to-call-a-function-when-i-click-on-a-jpanel-java
         entry.addMouseListener(this);
@@ -86,7 +115,11 @@ public class ListPane<EntryType extends JPanel> extends JScrollPane implements M
         }
         // Set new Selected Panel
         selectedEntry = index;
-        listEntries.get(index).setBackground(new Color(0x4ce5fc));
+        EntryType selectedEntry = listEntries.get(index);
+        selectedEntry.setBackground(new Color(0x4ce5fc));
+        for (ListActionListener listActionListener : actionListeners) {
+            listActionListener.selectChanged(index, selectedEntry);
+        }
     }
 
     public int getSelectedEntry() {

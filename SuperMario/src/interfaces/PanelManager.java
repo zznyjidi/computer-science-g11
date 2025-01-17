@@ -27,11 +27,7 @@ public class PanelManager {
      * @param layer target layer
      */
     public void switchPanel(JPanel panel, Integer layer) {
-        try {
-            layeredPane.remove(panels.get(layer));
-        } catch (NullPointerException e) {
-            //e.printStackTrace();
-        }
+        removePanel(layer);
         try {
             panels.put(layer, panel);
             panel.setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
@@ -45,10 +41,19 @@ public class PanelManager {
 
     public void removePanel(Integer layer) {
         try {
+            taggedPanels.put("last-panel-"+layer, panels.get(layer));
             layeredPane.remove(panels.get(layer));
         } catch (NullPointerException e) {
             //e.printStackTrace();
         }
+    }
+
+    public void useLastPage(Integer layer) {
+        switchPanel(taggedPanels.get("last-panel-"+layer), layer);
+    }
+
+    public boolean lastPageIsTag(Integer layer, String tag) {
+        return taggedPanels.get("last-panel-"+layer).equals(taggedPanels.get(tag));
     }
 
     public JLayeredPane getLayeredPane() {
@@ -62,6 +67,13 @@ public class PanelManager {
         }
         TitlePanel titlePanel = (TitlePanel) taggedPanels.get("title");
         switchPanel(titlePanel, JLayeredPane.DEFAULT_LAYER);
+    }
+    public void useLevelSelect() {
+        if (taggedPanels.get("level-select") == null) {
+            taggedPanels.put("level-select", new LevelSelectPanel());
+        }
+        LevelSelectPanel levelSelectPanel = (LevelSelectPanel) taggedPanels.get("level-select");
+        switchPanel(levelSelectPanel, JLayeredPane.DEFAULT_LAYER);
     }
     public void useReplaySelect() {
         if (taggedPanels.get("replay-select") == null) {

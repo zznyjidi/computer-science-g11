@@ -6,6 +6,7 @@ import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Settings {
     // Render Settings
@@ -16,6 +17,7 @@ public class Settings {
 
     // Level Settings
     public final static int LEVEL_COUNT = 2;
+    public final static Pattern LEVEL_FILE_PATTERN = Pattern.compile("(?:Level)([0-9]+)(?:\\.txt)", Pattern.CASE_INSENSITIVE);
 
     // Style Settings
     public final static String GAME_NAME = "Mario Game";

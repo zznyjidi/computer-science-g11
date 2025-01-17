@@ -71,17 +71,17 @@ public class Account {
         } catch (MalformedURLException e) {
             // Protocol Not Supported
             e.printStackTrace();
-            System.err.println("Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
+            System.err.println("Wrong Server Config! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
             return -2;
         } catch (URISyntaxException e) {
             // Invalid URI
             e.printStackTrace();
-            System.err.println("Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
+            System.err.println("Wrong Server Config! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
             return -2;
         } catch (ConnectException e) {
             // Network Error
             e.printStackTrace();
-            System.err.println("Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
+            System.err.println("Failed to Connect to Server! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
             return -2;
         } catch (IOException e) {
             // Wrong Info

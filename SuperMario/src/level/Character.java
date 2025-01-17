@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
 import global.Database;
 import global.Settings;
@@ -201,7 +202,12 @@ public class Character extends JLabel implements ActionListener {
             if (Database.replayMode) {
                 Database.replayMode = false;
             }
-            Database.levelPanel.nextLevel();
+            if (Database.panelManager.lastPageIsTag(JLayeredPane.DEFAULT_LAYER, "title")) {
+                Database.levelPanel.nextLevel();
+            } else {
+                Database.panelManager.removePanel(JLayeredPane.PALETTE_LAYER);
+                Database.panelManager.useLastPage(JLayeredPane.DEFAULT_LAYER);
+            }
             this.triggerNextLevel = false;
         }
 
