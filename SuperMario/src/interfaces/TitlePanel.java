@@ -78,7 +78,7 @@ public class TitlePanel extends JPanel implements ActionListener {
         switch (buttons.indexOf(e.getSource())) {
             // Start Button
             case 0 -> {
-                Database.panelManager.useLevel(1);
+                Database.panelManager.playLevel(1);
                 Database.panelManager.useScoreDisplay();
                 Database.levelTimer.start();
             }

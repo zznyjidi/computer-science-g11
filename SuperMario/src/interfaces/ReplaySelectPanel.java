@@ -40,8 +40,9 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
         leaderBoardPane.setBounds(0, 0, 400, 500);
         add(leaderBoardPane);
 
+        // Buttons
         buttonPanel = new JPanel();
-        buttonPanel.setBounds(430, 290, 150, 140);
+        buttonPanel.setBounds(430, 250, 150, 180);
         buttonPanel.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -50,11 +51,12 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
         constraints.ipady = 10;
         add(buttonPanel);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             JButton button = new JButton(switch (i) {
                 case 0 -> "Refresh";
                 case 1 -> "Browse";
                 case 2 -> "Play";
+                case 3 -> "Back";
                 default -> "ERROR!";
             });
             constraints.gridy = i;
@@ -118,6 +120,8 @@ public class ReplaySelectPanel extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Replay Not Selected! ", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
+            // Back Button
+            case 3 -> Database.panelManager.useTitle();
         }
     }
 }
