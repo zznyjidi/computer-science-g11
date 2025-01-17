@@ -118,7 +118,7 @@ public class ListPane<EntryType extends JPanel> extends JScrollPane implements M
         EntryType selectedEntry = listEntries.get(index);
         selectedEntry.setBackground(new Color(0x4ce5fc));
         for (ListActionListener listActionListener : actionListeners) {
-            listActionListener.selectChanged(index, selectedEntry);
+            listActionListener.selectChanged(this, index, selectedEntry);
         }
     }
 

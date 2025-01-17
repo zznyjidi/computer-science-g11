@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import global.Settings;
 import interfaces.list.LeaderBoardEntry;
-import interfaces.list.ListPane;
 import network.HttpRequest;
 
 public class LeaderBoard {
@@ -45,7 +44,7 @@ public class LeaderBoard {
      * @param level level id
      * @return JScrollPane for LeaderBoard
      */
-    public static ListPane<LeaderBoardEntry> fromLevel(int level) {
+    public static List<LeaderBoardEntry> fromLevel(int level) {
         // Fetch LeaderBoardInfo
         try {
             List<JSONObject> leaderBoardInfo = new ArrayList<>();
@@ -57,11 +56,11 @@ public class LeaderBoard {
             List<LeaderBoardEntry> entries = leaderBoardInfo.stream()
                 .map((JSONObject replay) -> LeaderBoardEntry.fromJson(replay))
                 .toList();
-            return new ListPane<LeaderBoardEntry>(entries);
+            return entries;
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.err.println("Failed to Fetch LeaderBoard! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
         }
-        return new ListPane<>();
+        return new ArrayList<>();
     }
 }

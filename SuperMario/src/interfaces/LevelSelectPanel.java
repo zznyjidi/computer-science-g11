@@ -25,32 +25,36 @@ public class LevelSelectPanel extends JPanel implements ListActionListener {
         componentInfo.weightx = 1;
         componentInfo.weighty = 1;
 
-        levelList = LevelEntry.fromDir();
-        levelList.setMinimumSize(new Dimension(200, 400));
-        levelList.setMaximumSize(new Dimension(200, Integer.MAX_VALUE));
-        componentInfo.gridx = 0;
-        componentInfo.gridy = 0;
-        add(levelList, componentInfo);
-
-        leaderBoard = LeaderBoard.fromLevel(1);
+        leaderBoard = new ListPane<>();
         leaderBoard.setMinimumSize(new Dimension(400, 400));
         leaderBoard.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
-        componentInfo.gridx = 1;
+        componentInfo.gridx = 0;
         componentInfo.gridy = 0;
         add(leaderBoard, componentInfo);
 
+        levelList = LevelEntry.fromDir();
+        levelList.setMinimumSize(new Dimension(200, 400));
+        levelList.setMaximumSize(new Dimension(200, Integer.MAX_VALUE));
+        componentInfo.gridx = 1;
+        componentInfo.gridy = 0;
+        add(levelList, componentInfo);
+
+        
+
         levelList.addActionListener(this);
+        levelList.selectEntry(0);
 
         revalidate();
         repaint();
     }
 
     @Override
-    public void selectChanged(int index, JPanel newEntry) {
-        LevelEntry selectedEntry = (LevelEntry) newEntry;
-        leaderBoard = LeaderBoard.fromLevel(selectedEntry.getLevelID());
+    public void selectChanged(ListPane<?> source, int index, JPanel newEntry) {
+        if (source.equals(levelList)) {
+            LevelEntry selectedEntry = (LevelEntry) newEntry;
+            leaderBoard.updateList(LeaderBoard.fromLevel(selectedEntry.getLevelID()));
+        }
         revalidate();
         repaint();
     }
-
 }

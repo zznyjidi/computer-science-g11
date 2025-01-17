@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import global.Settings;
@@ -62,19 +63,19 @@ public class Account {
             HttpURLConnection connection = HttpRequest.post_form(url, Map.ofEntries(
                 Map.entry("username", username),
                 Map.entry("password", password)));
-            String responds = HttpRequest.getRespond(connection);
-            JSONObject respondJson = new JSONObject(responds);
-            this.uid = respondJson.getInt("uid");
-            this.nickname = respondJson.getString("nickname");
-            this.authToken = "";
-            this.loggedIn = true;
-        } catch (MalformedURLException e) {
-            // Protocol Not Supported
-            e.printStackTrace();
-            System.err.println("Wrong Server Config! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
-            return -2;
-        } catch (URISyntaxException e) {
-            // Invalid URI
+            if (connection.getResponseCode() == 200) {
+                String responds = HttpRequest.getRespond(connection);
+                JSONObject respondJson = new JSONObject(responds);
+                this.uid = respondJson.getInt("uid");
+                this.nickname = respondJson.getString("nickname");
+                this.authToken = "";
+                this.loggedIn = true;
+            } else {
+                // Server Error / Wrong Info
+                return -1;
+            }
+        } catch (MalformedURLException | URISyntaxException e) {
+            // Protocol Not Supported / Invalid URL
             e.printStackTrace();
             System.err.println("Wrong Server Config! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
             return -2;
@@ -83,7 +84,7 @@ public class Account {
             e.printStackTrace();
             System.err.println("Failed to Connect to Server! Server Addr: " + Settings.scoreServerAddr[0] + "://" + Settings.scoreServerAddr[1]);
             return -2;
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             // Wrong Info
             return -1;
         }

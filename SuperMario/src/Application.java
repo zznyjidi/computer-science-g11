@@ -10,7 +10,7 @@ public class Application {
         // Init Online Service
         Settings.scoreServerAddr = new String[] { "http", "127.0.0.1:8080" };
         Database.account = new Account("test_user");
-        Database.account.login("uU55c1Y340XpLgJJHp74");
+        System.out.println("Logged in as: UID" + Database.account.login("uU55c1Y340XpLgJJHp74"));
         Database.replayRecorder = new ReplayRecorder();
 
         // Start MainFrame
