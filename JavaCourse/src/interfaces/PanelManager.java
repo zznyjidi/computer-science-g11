@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import assessment.QuestionList;
+
 public class PanelManager {
     // Components
     private Map<Integer, JPanel> panels = new HashMap<>();
@@ -49,5 +51,15 @@ public class PanelManager {
 
     public JLayeredPane getLayeredPane() {
         return layeredPane;
+    }
+
+    public void useAssessment() {
+        if (!taggedPanels.containsKey("assessment-manager")) {
+            if (QuestionList.pageManager == null) {
+                QuestionList.pageManager = QuestionList.createPagedManager();
+            }
+            taggedPanels.put("assessment-manager", QuestionList.pageManager);
+        }
+        switchPanel(taggedPanels.get("assessment-manager"), JLayeredPane.DEFAULT_LAYER);
     }
 }

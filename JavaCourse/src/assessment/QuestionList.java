@@ -1,7 +1,11 @@
 package assessment;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
+import interfaces.AssessmentQuestionPanel;
+import interfaces.PagedPanelManager;
 import validator.Executor.OutputLine;;
 
 public class QuestionList {
@@ -17,7 +21,21 @@ public class QuestionList {
             new AssessmentQuestion(
                 "Write a For loop that print 0 to 9. (Each Number on a new line)", 
                 genericTemplate, from0To9
+            ), 
+            new AssessmentQuestion(
+                "Write a For loop that calculate the sum from 0 to 9. (Print Only Once)", 
+                genericTemplate, new OutputLine[] {new OutputLine(0, "45")}
             )
         };
+    }
+
+    public static PagedPanelManager<AssessmentQuestionPanel> pageManager;
+
+    public static PagedPanelManager<AssessmentQuestionPanel> createPagedManager() {
+        List<AssessmentQuestionPanel> panelList = 
+            Arrays.stream(questions)
+            .map(question -> new AssessmentQuestionPanel(question))
+            .toList();
+        return new PagedPanelManager<>(panelList);
     }
 }

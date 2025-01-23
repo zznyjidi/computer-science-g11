@@ -34,6 +34,7 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 import assessment.AssessmentQuestion;
+import assessment.QuestionList;
 import validator.CompileResult;
 import validator.Compiler;
 import validator.ExecuteResult;
@@ -113,6 +114,10 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
     @Override
     public void actionPerformed(ActionEvent event) {
         switch (buttons.indexOf(event.getSource())) {
+            // Back Button
+            case 0 -> QuestionList.pageManager.lastPage();
+            // Next Button
+            case 2 -> QuestionList.pageManager.nextPage();
             // Validate button
             case 1 -> {
                 // Check if Source Code Changed
