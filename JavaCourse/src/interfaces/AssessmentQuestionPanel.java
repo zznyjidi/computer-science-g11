@@ -48,11 +48,14 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
 
     String lastRunSource = "";
     boolean lastRunSuccess = false;
+    AssessmentQuestion questionObject;
 
     static Color stdOutColor = Color.BLACK;
     static Color stdErrColor = Color.RED;
+    static Color promptColor = Color.BLUE;
 
     public AssessmentQuestionPanel(AssessmentQuestion question) {
+        questionObject = question;
         // Set Layout Manager
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -103,6 +106,10 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
         add(buttonPanel);
     }
 
+    public boolean isLastRunSuccess() {
+        return lastRunSuccess;
+    }
+
     @Override
     public void actionPerformed(ActionEvent event) {
         switch (buttons.indexOf(event.getSource())) {
@@ -113,10 +120,11 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
                     return;
                 // Clear Output
                 outputTextPane.setText("");
-                // Setup Highlight
+                // Setup Highlight and Color
                 // https://stackoverflow.com/questions/20341719/how-to-highlight-a-single-word-in-a-jtextarea
                 // https://stackoverflow.com/questions/10191723/highlight-one-specific-row-line-in-jtextarea
                 // https://stackoverflow.com/questions/18380350/removing-highlight-from-specific-word-java
+                // https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
                 Highlighter highlighter = editorPane.getHighlighter();
                 highlighter.removeAllHighlights();
                 // Compile Source Code
@@ -127,17 +135,21 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
                     ExecuteResult executeResult = Executor.executeFile(compileResult.getCompiledFiles().get(0));
                     outputTextPane.setEditable(true);
                     for (Executor.OutputLine outputLine : executeResult.getOutput()) {
-                        // Change Output Color
-                        // https://stackoverflow.com/questions/9650992/how-to-change-text-color-in-the-jtextarea
-                        StyleContext styleContext = StyleContext.getDefaultStyleContext();
-                        AttributeSet attributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, outputLine.getStream() == 0 ? stdOutColor : stdErrColor);
-                        attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.FontFamily, "Consolas");
-                        attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.Alignment, StyleConstants.ALIGN_LEFT);
-
-                        outputTextPane.setCaretPosition(outputTextPane.getDocument().getLength());
-                        outputTextPane.setCharacterAttributes(attributeSet, false);
-                        outputTextPane.replaceSelection(outputLine.getText() + "\n");
+                        addToOutputTextPane(
+                            outputLine.getText() + "\n", 
+                            outputTextPane.getDocument().getLength(), 
+                            outputLine.getStream() == 0 ? stdOutColor : stdErrColor
+                        );
                     }
+
+                    if (questionObject.validateOutput(executeResult.getOutput())) {
+                        addToOutputTextPane("Valid Answer, Congratulation! \n\n", 0, promptColor);
+                        lastRunSuccess = true;
+                    } else {
+                        addToOutputTextPane("Invalid Answer, Try Again! \n\n", 0, promptColor);
+                        lastRunSuccess = false;
+                    }
+
                     outputTextPane.setEditable(false);
                 } else {
                     // Output Error Message if compile failed
@@ -155,21 +167,32 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
                             e.printStackTrace();
                         }
 
-                        StyleContext styleContext = StyleContext.getDefaultStyleContext();
-                        AttributeSet attributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, stdErrColor);
-                        attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.FontFamily, "Consolas");
-                        attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.Alignment, StyleConstants.ALIGN_LEFT);
-
-                        outputTextPane.setCaretPosition(outputTextPane.getDocument().getLength());
-                        outputTextPane.setCharacterAttributes(attributeSet, false);
-                        outputTextPane.replaceSelection(diagnostic.toString() + "\n");
+                        addToOutputTextPane(
+                            diagnostic.toString() + "\n",  
+                            outputTextPane.getDocument().getLength(), 
+                            stdErrColor
+                        );
                     }
+                    addToOutputTextPane("Failed to Compile the Code! \n\n", 0, promptColor);
+                    lastRunSuccess = false;
                     outputTextPane.setEditable(false);
                 }
                 revalidate();
                 repaint();
             }
         }
+    }
+
+    private void addToOutputTextPane(String text, int position, Color color) {
+        StyleContext styleContext = StyleContext.getDefaultStyleContext();
+
+        AttributeSet attributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
+        attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.FontFamily, "Consolas");
+        attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.Alignment, StyleConstants.ALIGN_LEFT);
+
+        outputTextPane.setCaretPosition(position);
+        outputTextPane.setCharacterAttributes(attributeSet, false);
+        outputTextPane.replaceSelection(text);
     }
 
     @Override
