@@ -25,12 +25,12 @@ public class Executor {
 
             BufferedReader stdOut = new BufferedReader(new InputStreamReader(validatorProcess.getInputStream()));
             BufferedReader stdErr = new BufferedReader(new InputStreamReader(validatorProcess.getErrorStream()));
-            String stdOutLine = null;
             String stdErrLine = null;
+            String stdOutLine = null;
 
-            while ((stdErrLine = stdErr.readLine()) != null || (stdOutLine = stdOut.readLine()) != null) {
-                if (stdErrLine != null) processOutput.add(new OutputLine(1, stdErrLine));
+            while ((stdOutLine = stdOut.readLine()) != null | (stdErrLine = stdErr.readLine()) != null) {
                 if (stdOutLine != null) processOutput.add(new OutputLine(0, stdOutLine));
+                if (stdErrLine != null) processOutput.add(new OutputLine(1, stdErrLine));
             }
             processExitValue = validatorProcess.exitValue();
 
