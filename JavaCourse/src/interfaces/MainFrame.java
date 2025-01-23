@@ -1,7 +1,10 @@
 package interfaces;
 
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.WindowConstants;
+
+import assessment.QuestionList;
 
 public class MainFrame extends JFrame {
     static PanelManager panelManager;
@@ -20,5 +23,7 @@ public class MainFrame extends JFrame {
         // bugfix: force rerender
         revalidate();
         repaint();
+
+        panelManager.switchPanel(new AssessmentQuestionPanel(QuestionList.questions[0]), JLayeredPane.DEFAULT_LAYER);
     }
 }

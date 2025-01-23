@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,9 +18,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import javax.swing.text.Highlighter.HighlightPainter;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -39,16 +46,19 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
 
     public AssessmentQuestionPanel(AssessmentQuestion question) {
         // Set Layout Manager
+        setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         // Question
-        questionLabel = new JLabel(question.getQuestion());
+        questionLabel = new JLabel(question.getQuestion(), SwingConstants.CENTER);
         add(questionLabel);
         add(Box.createRigidArea(new Dimension(0, 5)));
 
         // Program Source
         editorPane = new JTextArea();
         try {
+            // Read File to String
+            // https://stackoverflow.com/questions/326390/how-do-i-create-a-java-string-from-the-contents-of-a-file
             editorPane.setText(Files.readString(Paths.get(question.getTemplateFile().toURI())));
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,6 +105,8 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
                     return;
                 // Clear Output
                 outputTextPane.setText("");
+                Highlighter highlighter = editorPane.getHighlighter();
+                highlighter.removeAllHighlights();
                 // Compile Source Code
                 CompileResult compileResult = Compiler.compileString(editorPane.getText());
                 if (compileResult.isSuccess()) {
@@ -110,6 +122,17 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
                     // Output Error Message if compile failed
                     outputTextPane.setEditable(true);
                     for (Diagnostic<? extends JavaFileObject> diagnostic : compileResult.getDiagnostic()) {
+                        int lineNumber = (int) diagnostic.getLineNumber();
+                        try {
+                            int highlightStartIndex = editorPane.getLineStartOffset(lineNumber - 1);
+                            int highlightEndIndex = editorPane.getLineEndOffset(lineNumber - 1);
+
+                            HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+                            highlighter.addHighlight(highlightStartIndex, highlightEndIndex, painter);
+                        } catch (BadLocationException e) {
+                            e.printStackTrace();
+                        }
+
                         outputTextPane.setCaretPosition(outputTextPane.getDocument().getLength());
                         outputTextPane.replaceSelection(diagnostic.toString() + "\n");
                     }
@@ -129,7 +152,7 @@ public class AssessmentQuestionPanel extends JPanel implements ActionListener, D
                         // Replace tab with space
                         editorPane.setText(editorPane.getText().replaceAll("\t", "    "));
                         // Set New Cursor Position
-                        editorPane.setCaretPosition(event.getOffset() + 3);
+                        editorPane.setCaretPosition(event.getOffset() + 4);
                     }
                 );
             }

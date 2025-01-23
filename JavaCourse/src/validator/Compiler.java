@@ -39,14 +39,14 @@ public class Compiler {
             // Create Temp File
             // https://stackoverflow.com/questions/26860167/what-is-a-safe-way-to-create-a-temp-file-in-java
             sourceFile = File.createTempFile("Source", ".java");
-            PrintWriter sourceWriter = new PrintWriter(sourceFile);
-            sourceWriter.println(String.format(
-                source, 
-                // Get Filename without extension
-                // https://stackoverflow.com/questions/924394/how-to-get-the-filename-without-the-extension-in-java
-                sourceFile.getName().replaceFirst("[.][^.]+$", ""))
-            );
-            sourceWriter.close();
+            try (PrintWriter sourceWriter = new PrintWriter(sourceFile)) {
+                sourceWriter.println(String.format(
+                    source, 
+                    // Get Filename without extension
+                    // https://stackoverflow.com/questions/924394/how-to-get-the-filename-without-the-extension-in-java
+                    sourceFile.getName().replaceFirst("[.][^.]+$", ""))
+                );
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
