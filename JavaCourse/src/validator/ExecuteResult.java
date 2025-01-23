@@ -21,6 +21,6 @@ public class ExecuteResult {
 
     @Override
     public String toString() {
-        return "ExecutorResult [statusCode=" + statusCode + ", output=" + output + "]";
+        return "ExecuteResult [statusCode=" + statusCode + ", output=" + output + "]";
     }
 }
